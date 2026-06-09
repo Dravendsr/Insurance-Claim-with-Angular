@@ -6,6 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.MediaType;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -157,6 +165,73 @@ public class DocumentController {
             response.put("message", "Error deleting document: " + e.getMessage());
             response.put("status", false);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    // Serve document content for viewing/downloading in the browser.
+    @GetMapping("/file/{documentId}")
+    public ResponseEntity<?> serveDocument(@PathVariable Long documentId) {
+        try {
+            Optional<Document> documentOpt = documentService.getDocumentById(documentId);
+            if (documentOpt.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Document not found");
+            }
+            Document document = documentOpt.get();
+            String path = document.getDocumentPath();
+            if (path == null || path.isBlank()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No document content available");
+            }
+
+            // If stored as data URL (data:<mime>;base64,<data>) decode and return bytes
+            if (path.startsWith("data:")) {
+                int comma = path.indexOf(',');
+                String meta = path.substring(5, comma);
+                String base64 = path.substring(comma + 1);
+                String mime = meta.split(";")[0];
+                byte[] bytes = java.util.Base64.getDecoder().decode(base64);
+                InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(bytes));
+                return ResponseEntity.ok()
+                        .contentLength(bytes.length)
+                        .contentType(MediaType.parseMediaType(mime))
+                        .body(resource);
+            }
+
+            // If path looks like a server-relative path, try to load from classpath:/static or filesystem
+            if (path.startsWith("/")) {
+                // Try classpath static folder first
+                Path fileOnClasspath = Paths.get("src/main/resources/static" + path);
+                if (Files.exists(fileOnClasspath)) {
+                    Resource fileResource = new org.springframework.core.io.PathResource(fileOnClasspath.toAbsolutePath());
+                    String mime = Files.probeContentType(fileOnClasspath);
+                    MediaType mediaType = mime != null ? MediaType.parseMediaType(mime) : MediaType.APPLICATION_OCTET_STREAM;
+                    return ResponseEntity.ok().contentType(mediaType).body(fileResource);
+                }
+
+                // Try as absolute/relative filesystem path (strip leading slash)
+                Path fsPath = Paths.get(path.substring(1));
+                if (Files.exists(fsPath)) {
+                    Resource fileResource = new org.springframework.core.io.PathResource(fsPath.toAbsolutePath());
+                    String mime = Files.probeContentType(fsPath);
+                    MediaType mediaType = mime != null ? MediaType.parseMediaType(mime) : MediaType.APPLICATION_OCTET_STREAM;
+                    return ResponseEntity.ok().contentType(mediaType).body(fileResource);
+                }
+
+                // Not found on server
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Document file not found on server: " + path);
+            }
+
+            // If it's an HTTP URL, redirect the client to it
+            if (path.startsWith("http://") || path.startsWith("https://")) {
+                return ResponseEntity.status(HttpStatus.FOUND).header("Location", path).build();
+            }
+
+            // Fallback: return not supported
+            return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body("Unsupported document path format");
+
+        } catch (IOException ioe) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error reading document: " + ioe.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error serving document: " + e.getMessage());
         }
     }
 }

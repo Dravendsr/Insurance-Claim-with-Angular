@@ -202,48 +202,105 @@ export class ApproverReviewComponent implements OnInit {
     }
   }
 
-  private createBlobUrl(document: Document): string | null {
+  private async createBlobUrl(document: Document): Promise<string | null> {
     if (!document.documentPath) {
       return null;
     }
 
     const path = document.documentPath.trim();
-    if (path.startsWith('data:')) {
+    if (path.startsWith('data:') || path.startsWith('http') || path.startsWith('/') || path.startsWith('blob:')) {
       return path;
     }
 
-    const base64 = path.replace(/\s+/g, '');
-    const byteCharacters = atob(base64);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    const mimeType = this.getMimeType(document);
+    const dataUrl = path.includes(',') ? path : `data:${mimeType};base64,${path.replace(/\s+/g, '')}`;
+
+    try {
+      const resp = await fetch(dataUrl);
+      if (!resp.ok) {
+        throw new Error('fetch failed');
+      }
+      const blob = await resp.blob();
+      return URL.createObjectURL(blob);
+    } catch (error) {
+      try {
+        const base64Data = dataUrl.split(',').pop() || '';
+        const byteCharacters = atob(base64Data.replace(/\s+/g, ''));
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: mimeType });
+        return URL.createObjectURL(blob);
+      } catch (err) {
+        return dataUrl;
+      }
     }
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: this.getMimeType(document) });
-    return URL.createObjectURL(blob);
   }
 
-  viewDocument(document: Document): void {
-    const url = this.createBlobUrl(document);
-    if (!url) {
+  async viewDocument(document: Document): Promise<void> {
+    const path = document.documentPath?.trim() || '';
+    let url = '';
+
+    if (path.startsWith('/')) {
+      const id = (document as any).documentId ?? (document as any).id;
+      url = id ? `/api/documents/file/${id}` : path;
+    } else if (path.startsWith('http://') || path.startsWith('https://')) {
+      url = path;
+    } else {
+      const created = await this.createBlobUrl(document);
+      if (!created) {
+        return;
+      }
+      url = created;
+    }
+
+    const mime = this.getMimeType(document);
+    const encodedUrl = url.replace(/"/g, '%22');
+    const win = window.open('', '_blank');
+    if (!win) {
       return;
     }
-    window.open(url, '_blank');
+
+    const viewer = mime === 'application/pdf'
+      ? `<embed src="${encodedUrl}" type="${mime}" width="100%" height="100%" />`
+      : mime.startsWith('image/')
+      ? `<img src="${encodedUrl}" style="max-width:100%;height:auto;display:block;margin:0 auto;"/>`
+      : `<a href="${encodedUrl}" target="_blank">Open document</a>`;
+
+    const html = `<!doctype html><html><head><title>${document.documentName || 'Document'}</title><meta charset="utf-8" /><style>html,body{height:100%;margin:0;background:#111;color:#fff}img,embed{display:block;max-height:100vh;margin:0 auto}</style></head><body>${viewer}</body></html>`;
+    win.document.open();
+    win.document.write(html);
+    win.document.close();
   }
 
-  downloadDocument(document: Document): void {
-    const url = this.createBlobUrl(document);
-    if (!url) {
-      return;
+  async downloadDocument(document: Document): Promise<void> {
+    const path = document.documentPath?.trim() || '';
+    let url = '';
+
+    if (path.startsWith('/')) {
+      const id = (document as any).documentId ?? (document as any).id;
+      url = id ? `/api/documents/file/${id}` : path;
+    } else if (path.startsWith('http://') || path.startsWith('https://')) {
+      url = path;
+    } else {
+      const created = await this.createBlobUrl(document);
+      if (!created) {
+        return;
+      }
+      url = created;
     }
+
     const anchor = window.document.createElement('a');
     anchor.href = url;
     anchor.download = document.documentName || 'document';
     window.document.body.appendChild(anchor);
     anchor.click();
     window.document.body.removeChild(anchor);
-    if (!document.documentPath?.startsWith('data:')) {
-      URL.revokeObjectURL(url);
+
+    if (!document.documentPath?.startsWith('data:') && !path.startsWith('http://') && !path.startsWith('https://')) {
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
   }
 
