@@ -1,0 +1,22 @@
+<div class="sidebar">
+  <div class="sidebar-header">
+    <h3>Admin Panel</h3>
+  </div>
+  <ul class="nav-list">
+    <li>
+      <a routerLink="/admin/dashboard" routerLinkActive="active">Dashboard</a>
+    </li>
+    <li>
+      <a routerLink="/admin/users" routerLinkActive="active">User Management</a>
+    </li>
+    <li>
+      <a routerLink="/admin/policies" routerLinkActive="active">Insurance Policies</a>
+    </li>
+    <li>
+      <a routerLink="/admin/payments" routerLinkActive="active">Payments</a>
+    </li>
+    <li class="logout-item">
+      <a (click)="onLogout()">Logout</a>
+    </li>
+  </ul>
+</div>

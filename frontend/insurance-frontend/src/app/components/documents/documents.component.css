@@ -1,0 +1,118 @@
+.page {
+  padding: 1.5rem;
+  background: var(--surface);
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+h2 {
+  margin-top: 0;
+}
+
+.subtitle {
+  margin: 0.5rem 0 1rem;
+  color: var(--muted);
+}
+
+table.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table.data-table th,
+ table.data-table td {
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.page select {
+  width: 100%;
+  max-width: 420px;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--surface);
+  color: #0f172a;
+  margin-top: 0.5rem;
+}
+
+.claim-picker-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.claim-picker-row label {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.selected-claim-summary {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: var(--surface-strong);
+  border: 1px solid #e2e8f0;
+}
+
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  font-size: 0.9rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.view-button {
+  color: #ffffff;
+  background: var(--primary);
+  border-color: transparent;
+}
+
+.download-button {
+  color: #ffffff;
+  background: var(--success);
+  border-color: transparent;
+}
+
+.no-action {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.status {
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 0.75rem;
+  background: var(--surface-strong);
+  color: var(--text);
+}
+
+.status.error {
+  background: var(--error-soft);
+  color: var(--error);
+}
+
+/* Style native select dropdown and options to match theme (limited by browser support) */
+.page select, .page select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.page select option:checked {
+  background: var(--surface-strong);
+  color: var(--text);
+}
+
+.page select option:hover {
+  background: var(--row-hover);
+  color: var(--text);
+}

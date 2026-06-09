@@ -1,0 +1,38 @@
+.page {
+  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+h2 {
+  margin-top: 0;
+}
+
+.subtitle {
+  margin: 0.5rem 0 1rem;
+  color: #4b5563;
+}
+
+table.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table.data-table th,
+ table.data-table td {
+  padding: 0.85rem 1rem;
+  border: 1px solid #e5e7eb;
+}
+
+.status {
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 0.75rem;
+  background: #eef2ff;
+}
+
+.status.error {
+  background: #fee2e2;
+  color: #991b1b;
+}

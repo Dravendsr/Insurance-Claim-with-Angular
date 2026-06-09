@@ -1,0 +1,128 @@
+%PDF-1.4\r\n1 0 obj\r\n<< /Type /Catalog /Pages 2 0 R >>\r\nendobj\r\n2 0 obj\r\n<< /Type /Pages /Kids [3 0 R 6 0 R] /Count 2 >>\r\nendobj\r\n3 0 obj\r\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 7 0 R /Resources << /Font << /F1 4 0 R >> >> >>\r\nendobj\r\n4 0 obj\r\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\r\nendobj\r\n5 0 obj\r\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 8 0 R /Resources << /Font << /F1 4 0 R >> >> >>\r\nendobj\r\n7 0 obj\r\n<< /Length 745 >>\r\nstream\r\nBT
+/F1 18 Tf
+80 720 Td
+(Data Flow Diagram Level 0) Tj
+ET
+BT
+/F1 12 Tf
+60 680 Td
+(Policyholder, Approver, Admin) Tj
+ET
+BT
+/F1 10 Tf
+70 620 Td
+(Policyholder) Tj
+ET
+120 625 m 220 625 l S
+BT
+/F1 10 Tf
+400 620 Td
+(Approver) Tj
+ET
+450 625 m 550 625 l S
+BT
+/F1 10 Tf
+70 500 Td
+(Admin) Tj
+ET
+120 505 m 220 505 l S
+BT
+/F1 12 Tf
+240 520 Td
+(Claim System) Tj
+ET
+260 510 m 360 510 l 360 560 l 260 560 l h S
+BT
+/F1 10 Tf
+270 540 Td
+(Insurance Claim) Tj
+ET
+BT
+/F1 10 Tf
+270 525 Td
+(Management) Tj
+ET
+260 450 m 260 430 l S
+180 470 m 260 470 l S
+360 470 m 440 470 l S
+200 505 m 200 520 l S
+340 505 m 340 520 l S
+BT
+/F1 10 Tf
+270 400 Td
+(Database: health_db) Tj
+ET
+150 380 m 450 380 l 450 420 l 150 420 l h Sendstream\r\nendobj\r\n8 0 obj\r\n<< /Length 953 >>\r\nstream\r\nBT
+/F1 18 Tf
+80 720 Td
+(Data Flow Diagram Level 1) Tj
+ET
+BT
+/F1 12 Tf
+50 680 Td
+(Policyholder) Tj
+ET
+BT
+/F1 10 Tf
+70 650 Td
+(Login / Profile / Claim Submission) Tj
+ET
+150 660 m 330 660 l 330 710 l 150 710 l h S
+BT
+/F1 10 Tf
+190 685 Td
+(Process Claims) Tj
+ET
+BT
+/F1 12 Tf
+390 680 Td
+(Approver) Tj
+ET
+410 650 m 510 650 l 510 690 l 410 690 l h S
+BT
+/F1 10 Tf
+420 670 Td
+(Review / Approve) Tj
+ET
+BT
+/F1 12 Tf
+50 520 Td
+(Admin) Tj
+ET
+70 490 m 220 490 l 220 540 l 70 540 l h S
+BT
+/F1 10 Tf
+90 515 Td
+(Manage Users / Policies) Tj
+ET
+BT
+/F1 12 Tf
+270 530 Td
+(Data Stores) Tj
+ET
+BT
+/F1 10 Tf
+260 450 Td
+(users, policies, claims, documents, payments) Tj
+ET
+180 460 m 530 460 l 530 500 l 180 500 l h S
+BT
+/F1 10 Tf
+200 580 Td
+(Submit Claim) Tj
+ET
+BT
+/F1 10 Tf
+420 580 Td
+(Approve / Reject) Tj
+ET
+BT
+/F1 10 Tf
+120 540 Td
+(Assign Policies) Tj
+ET
+BT
+/F1 10 Tf
+280 510 Td
+(Read/Write Data) Tj
+ETendstream\r\nendobj\r\nxref\r\n0 8\r\n0000000000 65535 f \r\n0000000012 00000 n \r\n0000000070 00000 n \r\n0000000142 00000 n \r\n0000000277 00000 n \r\n0000000356 00000 n \r\n0000000491 00000 n \r\n0000001301 00000 n \r\ntrailer << /Size 8 /Root 1 0 R >>\r\nstartxref\r\n2319\r\n%%EOF\r\n

@@ -1,0 +1,45 @@
+User Policies Module - Postman Methods
+====================================
+
+Base URL: /api/user-policies
+
+1. GET /api/user-policies
+   - Description: Get all user-policy assignments.
+   - Role: authenticated
+
+2. GET /api/user-policies/user/{userId}
+   - Description: Get all policies assigned to a specific user.
+   - Role: authenticated
+
+3. GET /api/user-policies/{userPolicyId}
+   - Description: Get details of a specific user-policy assignment.
+   - Role: authenticated
+
+4. POST /api/user-policies
+   - Description: Assign a policy to a user.
+   - Role: ADMIN
+   - Body Example:
+     {
+       "user": { "userId": 4 },
+       "insurancePolicy": { "policyId": 1 },
+       "purchasedDate": "2024-09-01",
+       "expiryDate": "2025-09-01",
+       "policyActiveStatus": "ACTIVE"
+     }
+
+5. PUT /api/user-policies/{userPolicyId}
+   - Description: Update a user-policy assignment.
+   - Role: ADMIN
+   - Body Example:
+     {
+       "expiryDate": "2025-12-31",
+       "policyActiveStatus": "ACTIVE"
+     }
+
+6. PATCH /api/user-policies/{userPolicyId}
+   - Description: Partially update a user-policy assignment.
+   - Role: ADMIN
+   - Body Example:
+     {
+       "policyActiveStatus": "SUSPENDED"
+     }

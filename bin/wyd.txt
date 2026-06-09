@@ -1,0 +1,67 @@
+What I did in this project:
+
+- Built a complete Spring Boot backend for a Health Insurance Claim Management System.
+- Used Java 17 and Spring Boot 4 with MySQL database support.
+- Created JPA entities, repositories, services, controllers, and documentation.
+
+What I created:
+
+- Entities:
+  - User
+  - InsurancePolicy
+  - UserPolicy
+  - Hospital
+  - Doctor
+  - Treatment
+  - Claim
+  - Document
+  - Payment
+
+- Repositories:
+  - UserRepository
+  - InsurancePolicyRepository
+  - UserPolicyRepository
+  - HospitalRepository
+  - DoctorRepository
+  - TreatmentRepository
+  - ClaimRepository
+  - PaymentRepository
+
+- Service interfaces and implementations for all entities:
+  - UserService / UserServiceImpl
+  - InsurancePolicyService / InsurancePolicyServiceImpl
+  - UserPolicyService / UserPolicyServiceImpl
+  - HospitalService / HospitalServiceImpl
+  - DoctorService / DoctorServiceImpl
+  - TreatmentService / TreatmentServiceImpl
+  - ClaimService / ClaimServiceImpl
+  - PaymentService / PaymentServiceImpl
+
+- Controllers for REST APIs:
+  - UserController
+  - InsurancePolicyController
+  - UserPolicyController
+  - HospitalController
+  - DoctorController
+  - TreatmentController
+  - ClaimController
+  - DocumentController
+  - PaymentController
+
+What I added and changed:
+
+- Added Spring Security Crypto dependency for BCrypt password hashing.
+- Configured application.properties for MySQL connection, Hibernate settings, and logging.
+- Implemented user login with password validation and account status checking.
+- Implemented claim approval and rejection workflow with validation rules.
+- Implemented payment processing with claim settlement updates.
+- Added CORS support and standardized JSON response format.
+- Created SQL initialization script with sample data and database structure.
+- Created README documentation.
+- Created Postman collection JSON for API testing.
+- Created dependency explanation file.
+- Created Angular frontend integration guide.
+
+Summary:
+
+The project includes a full backend API layer, database mapping, business logic for claims and payments, and supporting documentation for testing and frontend integration. All core entities, repositories, services, and controllers were created to make the system ready for use and extension.

@@ -1,0 +1,70 @@
+<section class="dashboard-page">
+  <div class="dashboard-hero">
+    <div>
+      <p class="eyebrow">{{ role }} overview</p>
+      <h2>{{ title }}</h2>
+      <p class="description">{{ subtitle }}</p>
+      <div class="admin-profile-summary" *ngIf="role === 'ADMIN'" style="margin-top: 1rem; color: var(--muted);">
+        <p><strong>Name:</strong> {{ userFullName }}</p>
+        <p><strong>Email:</strong> {{ userEmail }}</p>
+        <p><strong>Status:</strong> <span class="badge badge-active">{{ userStatus }}</span></p>
+      </div>
+    </div>
+    <div class="hero-actions" *ngIf="role !== 'ADMIN'">
+      <ng-container *ngIf="role === 'POLICYHOLDER'">
+        <a routerLink="/new-claim" class="primary-button">New Claim</a>
+        <a routerLink="/policies" class="secondary">View Policies</a>
+      </ng-container>
+      <ng-container *ngIf="role === 'APPROVER'">
+        <a routerLink="/approver/pending" class="primary-button">Pending Claims</a>
+        <a routerLink="/documents" class="secondary">Review Documents</a>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="dashboard-metrics" *ngIf="role !== 'ADMIN'">
+    <article class="metric-card">
+      <p>Total Policies</p>
+      <strong>{{ totalPolicies }}</strong>
+      <span>All policies assigned to you</span>
+    </article>
+    <article class="metric-card">
+      <p>Active Policies</p>
+      <strong>{{ activePoliciesCount }}</strong>
+      <span>Policies currently active</span>
+    </article>
+    <article class="metric-card">
+      <p>Total Claims</p>
+      <strong>{{ totalClaims }}</strong>
+      <span>Claims raised so far</span>
+    </article>
+    <article class="metric-card">
+      <p>Approved Claims</p>
+      <strong>{{ approvedClaims }}</strong>
+      <span>Claims that have been approved</span>
+    </article>
+    <article class="metric-card">
+      <p>Pending Claims</p>
+      <strong>{{ pendingClaims }}</strong>
+      <span>Claims currently under review</span>
+    </article>
+    <article class="metric-card">
+      <p>Rejected Claims</p>
+      <strong>{{ rejectedClaims }}</strong>
+      <span>Claims that were rejected</span>
+    </article>
+    <article class="metric-card">
+      <p>Total Reimbursement</p>
+      <strong>{{ totalReimbursement | currency:'INR':'symbol':'1.0-0' }}</strong>
+      <span>Amount received so far</span>
+    </article>
+  </div>
+
+  <div class="dashboard-grid">
+    <a class="dashboard-card" *ngFor="let card of cards" [routerLink]="card.route">
+      <h3>{{ card.title }}</h3>
+      <p>{{ card.description }}</p>
+      <span class="card-action">Open</span>
+    </a>
+  </div>
+</section>

@@ -1,0 +1,46 @@
+Documents Module - Postman Methods
+=================================
+
+Base URL: /api/documents
+
+1. GET /api/documents
+   - Description: Get all documents.
+   - Role: authenticated
+
+2. GET /api/documents/{documentId}
+   - Description: Get a document by ID.
+   - Role: authenticated
+
+3. POST /api/documents
+   - Description: Upload a document linked to a claim.
+   - Role: authenticated
+   - Body Example:
+     {
+       "documentName": "Medical_Report_CLM011.pdf",
+       "documentType": "Medical Report",
+       "documentPath": "/documents/medical_reports/CLM011.pdf",
+       "claim": { "claimId": 11 }
+     }
+
+4. PUT /api/documents/{documentId}
+   - Description: Update document metadata.
+   - Role: authenticated
+   - Body Example:
+     {
+       "documentName": "Medical_Report_CLM011_Updated.pdf",
+       "documentType": "Medical Report",
+       "documentPath": "/documents/medical_reports/CLM011_Updated.pdf",
+       "claim": { "claimId": 11 }
+     }
+
+5. PATCH /api/documents/{documentId}
+   - Description: Partially update document details.
+   - Role: authenticated
+   - Body Example:
+     {
+       "documentPath": "/documents/medical_reports/CLM011_New.pdf"
+     }
+
+6. DELETE /api/documents/{documentId}
+   - Description: Delete a document.
+   - Role: authenticated

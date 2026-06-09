@@ -1,0 +1,190 @@
+<section class="page card">
+  <div class="page-header">
+    <div>
+      <h2>New Claim Submission</h2>
+      <p class="subtitle">Submit a medical claim with supporting documents in a step-by-step form.</p>
+      <div class="stepper">
+        <button
+          *ngFor="let step of stepTitles; index as i"
+          type="button"
+          class="step-pill"
+          [class.active]="currentStep === i + 1"
+          [class.completed]="currentStep > i + 1"
+          [disabled]="currentStep <= i + 1"
+          (click)="goToStep(i + 1)">
+          <span class="step-number">{{ i + 1 }}</span>
+          <span class="step-label">{{ step }}</span>
+        </button>
+      </div>
+    </div>
+    <div class="step-indicator">Step {{ currentStep }} of 7 - {{ currentStepTitle }}</div>
+  </div>
+
+  <div *ngIf="popupMessage" class="flash-message" [ngClass]="{'success': popupType === 'success', 'error': popupType === 'error'}">
+    {{ popupMessage }}
+  </div>
+
+  <div *ngIf="isLoading" class="status">Loading policy details...</div>
+  <div *ngIf="!isLoading && !policyList.length" class="status error">
+    No purchased policies found. Please contact support if this seems wrong.
+  </div>
+
+  <form *ngIf="!isLoading && policyList.length" class="wizard-form" novalidate>
+    <div class="step-content" *ngIf="currentStep === 1">
+      <p class="section-note">Select the policy under which you want to submit the claim.</p>
+      <div class="policy-grid">
+        <button
+          *ngFor="let policy of policyList"
+          type="button"
+          class="policy-card"
+          [class.selected]="policy.insurancePolicy?.policyId === selectedPolicyId"
+          (click)="selectPolicy(policy.insurancePolicy?.policyId)">
+          <h3>{{ policy.insurancePolicy?.policyName }}</h3>
+          <p class="muted">Policy Number: {{ policy.insurancePolicy?.policyNumber }}</p>
+          <div class="policy-data">
+            <span>{{ policy.insurancePolicy?.coverageAmount | currency:'INR':'symbol' }}</span>
+            <span>{{ policy.insurancePolicy?.premiumAmount | currency:'INR':'symbol' }}/yr</span>
+          </div>
+          <div class="policy-status">{{ policy.insurancePolicy?.policyStatus }}</div>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="currentStep === 2" class="step-content">
+      <p class="section-note">Provide the treatment details for your claim.</p>
+      <div class="form-grid">
+        <label>
+          Treatment Name
+          <input [(ngModel)]="form.treatmentName" name="treatmentName" type="text" placeholder="Enter treatment name" />
+        </label>
+        <label>
+          Diagnosis
+          <input [(ngModel)]="form.diagnosis" name="diagnosis" type="text" placeholder="Enter diagnosis" />
+        </label>
+        <label>
+          Treatment Date
+          <input [(ngModel)]="form.treatmentDate" name="treatmentDate" type="date" />
+        </label>
+        <label>
+          Treatment Cost
+          <input [(ngModel)]="form.treatmentCost" name="treatmentCost" type="number" min="0" placeholder="Enter treatment cost" />
+        </label>
+      </div>
+    </div>
+
+    <div *ngIf="currentStep === 3" class="step-content">
+      <p class="section-note">Tell us about the doctor who treated you.</p>
+      <div class="form-grid">
+        <label>
+          Doctor Name
+          <input [(ngModel)]="form.doctorName" name="doctorName" type="text" placeholder="Enter doctor name" />
+        </label>
+        <label>
+          Specialization
+          <input [(ngModel)]="form.doctorSpecialization" name="doctorSpecialization" type="text" placeholder="Enter specialization" />
+        </label>
+        <label>
+          Registration Number
+          <input [(ngModel)]="form.doctorRegistrationNumber" name="doctorRegistrationNumber" type="text" placeholder="Enter registration number" />
+        </label>
+      </div>
+    </div>
+
+    <div *ngIf="currentStep === 4" class="step-content">
+      <p class="section-note">Provide hospital admission and discharge details.</p>
+      <div class="form-grid">
+        <label>
+          Hospital Name
+          <input [(ngModel)]="form.hospitalName" name="hospitalName" type="text" placeholder="Enter hospital name" />
+        </label>
+        <label>
+          Hospital Address
+          <textarea [(ngModel)]="form.hospitalAddress" name="hospitalAddress" placeholder="Enter hospital address"></textarea>
+        </label>
+        <label>
+          Admission Date
+          <input [(ngModel)]="form.admissionDate" name="admissionDate" type="date" />
+        </label>
+        <label>
+          Discharge Date
+          <input [(ngModel)]="form.dischargeDate" name="dischargeDate" type="date" />
+        </label>
+      </div>
+    </div>
+
+    <div *ngIf="currentStep === 5" class="step-content">
+      <p class="section-note">Request your claim amount and verify coverage limits.</p>
+      <div class="form-grid">
+        <label>
+          Requested Claim Amount
+          <input [(ngModel)]="form.requestedAmount" name="requestedAmount" type="number" min="0" placeholder="Enter requested amount" />
+        </label>
+        <label class="coverage-summary">
+          Coverage Limit
+          <span>{{ policyList.find(policy => policy.insurancePolicy?.policyId === selectedPolicyId)?.insurancePolicy?.coverageAmount | currency:'INR':'symbol' }}</span>
+        </label>
+      </div>
+    </div>
+
+    <div *ngIf="currentStep === 6" class="step-content">
+      <p class="section-note">Upload the required supporting documents.</p>
+      <div class="document-grid">
+        <label class="upload-card">
+          <span>Medical Bill</span>
+          <input type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" (change)="onFileChange('medicalBill', $event)" />
+          <small *ngIf="form.documents.medicalBill.error" class="error-text">{{ form.documents.medicalBill.error }}</small>
+          <span *ngIf="form.documents.medicalBill.file" class="file-name">{{ form.documents.medicalBill.file.name }}</span>
+        </label>
+        <label class="upload-card">
+          <span>Treatment Bill</span>
+          <input type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" (change)="onFileChange('treatmentBill', $event)" />
+          <small *ngIf="form.documents.treatmentBill.error" class="error-text">{{ form.documents.treatmentBill.error }}</small>
+          <span *ngIf="form.documents.treatmentBill.file" class="file-name">{{ form.documents.treatmentBill.file.name }}</span>
+        </label>
+        <label class="upload-card">
+          <span>Hospital Bill</span>
+          <input type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" (change)="onFileChange('hospitalBill', $event)" />
+          <small *ngIf="form.documents.hospitalBill.error" class="error-text">{{ form.documents.hospitalBill.error }}</small>
+          <span *ngIf="form.documents.hospitalBill.file" class="file-name">{{ form.documents.hospitalBill.file.name }}</span>
+        </label>
+        <label class="upload-card">
+          <span>Doctor Prescription</span>
+          <input type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" (change)="onFileChange('doctorPrescription', $event)" />
+          <small *ngIf="form.documents.doctorPrescription.error" class="error-text">{{ form.documents.doctorPrescription.error }}</small>
+          <span *ngIf="form.documents.doctorPrescription.file" class="file-name">{{ form.documents.doctorPrescription.file.name }}</span>
+        </label>
+      </div>
+    </div>
+
+    <div *ngIf="currentStep === 7" class="step-content">
+      <p class="section-note">Review the claim summary before submission.</p>
+      <div class="review-block">
+        <div class="review-row"><strong>Policy:</strong> {{ policyList.find(policy => policy.insurancePolicy?.policyId === selectedPolicyId)?.insurancePolicy?.policyName }}</div>
+        <div class="review-row"><strong>Treatment:</strong> {{ form.treatmentName }}</div>
+        <div class="review-row"><strong>Requested Amount:</strong> {{ form.requestedAmount | currency:'INR':'symbol' }}</div>
+        <div class="review-row"><strong>Duplicate claims found:</strong> {{ hasExistingClaimForSelectedPolicy() ? 'Yes' : 'No' }}</div>
+      </div>
+    </div>
+
+    <div class="wizard-actions">
+      <button type="button" class="secondary-button" (click)="previousStep()" [disabled]="currentStep === 1 || submitSuccess">Back</button>
+      <button *ngIf="!submitSuccess" type="button" class="primary-button" (click)="nextStep()" [disabled]="submitLoading">
+        {{ currentStep === 7 ? 'Submit Claim' : 'Continue' }}
+      </button>
+      <button *ngIf="submitSuccess" type="button" class="primary-button" (click)="goToClaims()">
+        Go to My Claims
+      </button>
+    </div>
+  </form>
+
+  <div class="confirmation-overlay" *ngIf="showDuplicateConfirmation">
+    <div class="confirmation-dialog">
+      <h3>Duplicate claim detected</h3>
+      <p>A claim has already been raised under this policy. Do you want to continue?</p>
+      <div class="dialog-actions">
+        <button type="button" class="secondary-button" (click)="cancelDuplicateSubmission()">Cancel</button>
+        <button type="button" class="primary-button" (click)="continueDuplicateSubmission()">Continue</button>
+      </div>
+    </div>
+  </div>
+</section>

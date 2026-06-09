@@ -1,0 +1,27 @@
+<section class="page card">
+  <h2>Doctor Information</h2>
+  <p class="subtitle">View registered doctors and specialties.</p>
+  <div *ngIf="loading" class="status">Loading doctors...</div>
+  <div *ngIf="error" class="status error">{{ error }}</div>
+  <table *ngIf="!loading && !error && doctors.length" class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Specialization</th>
+        <th>Phone</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let doctor of doctors; index as i">
+        <td>{{ i + 1 }}</td>
+        <td>{{ doctor.name }}</td>
+        <td>{{ doctor.specialization }}</td>
+        <td>{{ doctor.phone }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="!loading && !error && !doctors.length" class="status">
+    No doctors found.
+  </div>
+</section>

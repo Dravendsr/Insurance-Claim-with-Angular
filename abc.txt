@@ -1,0 +1,174 @@
+Health Insurance Claim Management System
+
+1. Project Overview
+-------------------
+This is a Spring Boot backend application for managing health insurance claims, policies, users, hospitals, doctors, treatments, documents, and payments.
+
+2. Core Technologies and Dependencies
+-------------------------------------
+Maven dependencies in pom.xml:
+- org.springframework.boot:spring-boot-starter-data-jpa
+- org.springframework.boot:spring-boot-starter-validation
+- org.springframework.boot:spring-boot-starter-webmvc
+- org.springframework.boot:spring-boot-devtools (runtime, optional)
+- com.mysql:mysql-connector-j (runtime)
+- org.springframework.boot:spring-boot-starter-data-jpa-test (test)
+- org.springframework.boot:spring-boot-starter-validation-test (test)
+- org.springframework.boot:spring-boot-starter-webmvc-test (test)
+- org.springframework.security:spring-security-crypto
+
+Project platform:
+- Java 17
+- Spring Boot 4.0.6
+- Maven build tool
+- Jakarta Persistence / JPA / Hibernate ORM
+- MySQL database
+- BCrypt for password hashing
+
+3. Application Structure
+-------------------------
+Main packages:
+- com.insurance.claimmanagement.entity: JPA entities
+- com.insurance.claimmanagement.repository: Spring Data JPA repositories
+- com.insurance.claimmanagement.service: service interfaces and implementations
+- com.insurance.claimmanagement.controller: REST controllers
+
+Resources:
+- src/main/resources/application.properties
+- health_db_initialization.sql
+
+Main runtime entry:
+- HealthInsuranceClaimManagementApplication.java
+
+4. Database Link and Configuration
+----------------------------------
+Configured in src/main/resources/application.properties:
+- spring.datasource.url=jdbc:mysql://localhost:3306/health_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+- spring.datasource.username=root
+- spring.datasource.password=root
+- spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+- spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+- spring.jpa.hibernate.ddl-auto=update
+- spring.jpa.show-sql=true
+- spring.jpa.properties.hibernate.format_sql=true
+
+This means the application connects to a local MySQL database called `health_db` and uses Hibernate to automatically update the schema.
+
+5. Database Schema / Table Names
+--------------------------------
+The database initialization script defines the following tables:
+- users
+- insurance_policies
+- user_policies
+- hospitals
+- doctors
+- treatments
+- claims
+- documents
+- payments
+
+Key relationships:
+- users -> user_policies (one-to-many)
+- insurance_policies -> user_policies (one-to-many)
+- hospitals -> doctors (one-to-many)
+- users -> treatments (one-to-many)
+- doctors -> treatments (one-to-many)
+- hospitals -> treatments (one-to-many)
+- treatments -> claims (one-to-one)
+- users -> claims (one-to-many)
+- insurance_policies -> claims (one-to-many)
+- claims -> documents (one-to-many)
+- claims -> payments (one-to-one)
+
+6. Domain Concepts
+------------------
+Entities and business concepts:
+- User: account with role, login, profile, banking info
+- InsurancePolicy: policy metadata and coverage
+- UserPolicy: assignment of a policy to a user with active/expiry status
+- Hospital: provider details
+- Doctor: linked to hospitals and treatments
+- Treatment: medical treatment record for a user
+- Claim: insurance claim tied to treatment and policy
+- Document: supporting evidence for claims
+- Payment: settlement of approved claims
+
+User roles:
+- ADMIN: manage users, policies, hospitals, doctors, payments, and analytics
+- APPROVER: review claims, verify treatment details and documents, approve or reject reimbursements
+- POLICYHOLDER: submit reimbursement claims, upload supporting documents, view claim status and decisions
+
+7. API and Workflow
+-------------------
+The backend exposes REST endpoints under `/api/*`.
+
+Main workflow:
+1. Policyholder logs in.
+2. Policyholder views assigned policies.
+3. Policyholder collects treatment details and supporting documents.
+4. Policyholder submits a reimbursement claim.
+5. Approver reviews the claim and supporting evidence.
+6. Approver approves or rejects the claim.
+7. Approved claims proceed to payment processing and then become SETTLED.
+
+8. Frontend Ideas
+-----------------
+A frontend can be built using Angular, React, Vue, or plain HTML/JS.
+
+Suggested modules/pages:
+- Login page for all users
+- Dashboard by role: policyholder, approver, admin
+- User management page (admin)
+- Policy catalog and policy assignment page
+- User policy list page
+- Hospital and doctor management pages
+- Treatment submission page
+- Claim creation page and status tracker
+- Claim review page for approvers
+- Document upload / attachment page
+- Payment processing and payment history page
+
+UI components:
+- Login form
+- Role-aware navigation menu
+- Data tables for users, policies, claims, payments
+- Forms for create/update operations
+- Status badges for claim/payment lifecycle
+- Modal dialogs for approvals and rejection reasons
+
+Integration notes:
+- Use REST calls to the backend API endpoints.
+- Use JSON body payloads for create/update operations.
+- Handle authentication state in the client; the backend currently uses a simple login endpoint without JWT.
+
+9. Recommended Frontend Architecture
+------------------------------------
+- Service layer for API calls
+- Component pages for each domain area
+- Shared auth state in global store or context
+- Routing by role and page: /login, /dashboard, /claims, /policies, /payments
+- Validation in forms before submitting to backend
+
+10. Deployment and Running
+--------------------------
+To run the project locally:
+- Install Java 17
+- Install MySQL 8
+- Configure database credentials in `application.properties`
+- Run `health_db_initialization.sql` if desired or let Hibernate create/update schema automatically
+- Use Maven wrapper: `./mvnw.cmd spring-boot:run`
+
+If MySQL is not available, the project can still start if the configured MySQL instance is accessible and correct.
+
+11. Notes
+---------
+- Passwords are encoded with BCrypt.
+- The application uses `spring.jpa.hibernate.ddl-auto=update`, so schema changes are applied automatically.
+- The system is built as a traditional REST backend; a separate SPA frontend is the best next step.
+
+12. Latest Changes
+------------------
+- Added `zee/` folder with module-specific endpoint guides in text files.
+- Added `zee/feature.txt` to document the new Intelligent Claim Recommendation and Admin Analytics enhancements.
+- Updated README to include the new `zee` documentation and feature references.
+- The recommendation engine and analytics dashboard were enhanced to support improved validations and reporting.

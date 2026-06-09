@@ -1,0 +1,48 @@
+Doctors Module - Postman Methods
+==============================
+
+Base URL: /api/doctors
+
+1. GET /api/doctors
+   - Description: Get all doctors.
+   - Role: authenticated
+
+2. GET /api/doctors/{doctorId}
+   - Description: Get doctor details by ID.
+   - Role: authenticated
+
+3. POST /api/doctors
+   - Description: Create a new doctor.
+   - Role: ADMIN
+   - Body Example:
+     {
+       "doctorName": "Dr. Aarti Sharma",
+       "specialization": "Cardiology",
+       "qualification": "MD Cardiology",
+       "experienceYears": 12,
+       "hospital": { "hospitalId": 1 }
+     }
+
+4. PUT /api/doctors/{doctorId}
+   - Description: Update doctor details.
+   - Role: ADMIN
+   - Body Example:
+     {
+       "doctorName": "Dr. Aarti Sharma",
+       "specialization": "Cardiology",
+       "qualification": "MD Cardiology",
+       "experienceYears": 13,
+       "hospital": { "hospitalId": 1 }
+     }
+
+5. PATCH /api/doctors/{doctorId}
+   - Description: Partially update doctor details.
+   - Role: ADMIN
+   - Body Example:
+     {
+       "experienceYears": 13
+     }
+
+6. DELETE /api/doctors/{doctorId}
+   - Description: Delete doctor.
+   - Role: ADMIN

@@ -1,0 +1,69 @@
+<section class="page card">
+  <div class="header-action">
+    <div>
+      <h2>Hospital Management</h2>
+      <p class="subtitle">View and manage registered healthcare providers in the network.</p>
+    </div>
+    <button class="primary-button" (click)="toggleAddForm()">
+      {{ showAddForm ? 'Cancel' : 'Add Hospital' }}
+    </button>
+  </div>
+
+  <div *ngIf="showAddForm" class="add-form">
+    <h3>Add New Hospital</h3>
+    <div class="form-grid">
+      <input [(ngModel)]="newHospital.hospitalName" placeholder="Hospital Name" type="text" />
+      <input [(ngModel)]="newHospital.hospitalType" placeholder="Hospital Type (e.g., Private, Govt)" type="text" />
+      <input [(ngModel)]="newHospital.address" placeholder="Address" type="text" />
+      <input [(ngModel)]="newHospital.phoneNumber" placeholder="Phone Number" type="text" />
+      <button class="primary-button" (click)="addHospital()">Save Hospital</button>
+    </div>
+  </div>
+
+  <div *ngIf="showEditForm" class="add-form">
+    <h3>Edit Hospital</h3>
+    <div class="form-grid">
+      <input [(ngModel)]="editingHospital!.hospitalName" placeholder="Hospital Name" type="text" />
+      <input [(ngModel)]="editingHospital!.hospitalType" placeholder="Type" type="text" />
+      <input [(ngModel)]="editingHospital!.address" placeholder="Address" type="text" />
+      <input [(ngModel)]="editingHospital!.phoneNumber" placeholder="Phone Number" type="text" />
+      <button class="primary-button" (click)="updateHospital()">Update Hospital</button>
+      <button class="secondary-button" (click)="showEditForm = false" style="margin-left: 0.5rem;">Cancel</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="status">Loading hospitals...</div>
+  <div *ngIf="error" class="status error">{{ error }}</div>
+
+  <table *ngIf="!loading && !error && hospitals.length" class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Hospital Name</th>
+        <th>Type</th>
+        <th>Address</th>
+        <th>Phone Number</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let hospital of hospitals; index as i">
+        <td>{{ i + 1 }}</td>
+        <td>{{ hospital.hospitalName }}</td>
+        <td>{{ hospital.hospitalType }}</td>
+        <td>{{ hospital.address }}</td>
+        <td>{{ hospital.phoneNumber }}</td>
+        <td>
+          <button class="secondary-button" (click)="editHospital(hospital)" style="margin-right: 0.5rem;">Edit</button>
+          <button class="danger-button" (click)="removeHospital(hospital.hospitalId)">
+            Remove
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && !error && !hospitals.length" class="status">
+    No hospitals found in the system.
+  </div>
+</section>

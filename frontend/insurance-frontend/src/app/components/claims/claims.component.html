@@ -1,0 +1,60 @@
+<section class="page card">
+  <h2>Claim Management</h2>
+  <p class="subtitle">Track claims and their statuses.</p>
+  <div *ngIf="flashMessage" class="flash-message" [ngClass]="{'success': flashType === 'success', 'error': flashType === 'error'}">
+    {{ flashMessage }}
+  </div>
+  <div *ngIf="loading" class="status">Loading claims...</div>
+  <div *ngIf="error" class="status error">{{ error }}</div>
+  <table *ngIf="!loading && !error && claims.length > 0" class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Claim Number</th>
+        <th>Policy ID</th>
+        <th>Status</th>
+        <th>Amount</th>
+        <th>Review</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let claim of claims; index as i">
+        <td>{{ i + 1 }}</td>
+        <td>{{ claim.claimNumber }}</td>
+        <td>{{ claim.policyId }}</td>
+        <td>
+          <div class="status-pill" [ngClass]="claim.status?.toLowerCase()">{{ claim.status }}</div>
+          <div class="status-flow">
+            <span class="flow-dot" [ngClass]="getStageClasses(claim, 'SUBMITTED')"></span>
+            <span class="flow-label">Submitted</span>
+            <span class="flow-line" [ngClass]="isStageCompleted(claim, 'PENDING') ? 'completed' : ''"></span>
+            <span class="flow-dot" [ngClass]="getStageClasses(claim, 'PENDING')"></span>
+            <span class="flow-label">Pending</span>
+            <ng-container *ngIf="claim.status === 'APPROVED' || claim.status === 'SETTLED' || claim.status === 'REJECTED'">
+              <span class="flow-line completed"></span>
+              <span class="flow-dot" [ngClass]="getStageClasses(claim, claim.status === 'REJECTED' ? 'REJECTED' : 'APPROVED')"></span>
+              <span class="flow-label">{{ claim.status === 'REJECTED' ? 'Rejected' : 'Approved' }}</span>
+            </ng-container>
+          </div>
+        </td>
+        <td>
+          <div *ngIf="claim.approverComment || claim.rejectionReason" class="review-note">
+            <strong>{{ claim.status === 'REJECTED' ? 'Reject reason:' : 'Approver note:' }}</strong>
+            <span>{{ claim.rejectionReason || claim.approverComment }}</span>
+          </div>
+          <div *ngIf="!claim.approverComment && !claim.rejectionReason" class="review-note empty">
+            Waiting for reviewer feedback.
+          </div>
+        </td>
+        <td>{{ claim.amount | currency:'INR':'symbol':'1.0-0' }}</td>
+        <td>
+          <button class="secondary-button" (click)="checkClaimStatus(claim)">Track Status</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="!loading && !error && claims.length === 0" class="status">
+    No claims found.
+  </div>
+</section>

@@ -1,0 +1,107 @@
+Base URL: http://localhost:8989
+
+Authentication:
+- Use Basic Auth for authenticated calls (username/password).
+- Login endpoint (/api/users/login) is public.
+
+Login response format:
+{
+  "message": "...",
+  "status": true|false,
+  "role": "ADMIN|APPROVER|POLICYHOLDER|null"
+}
+
+General API response format:
+{
+  "message": "...",
+  "status": true|false,
+  "data": ...
+}
+
+---
+APPROVER Endpoints
+---
+
+1) Login
+POST /api/users/login
+Body:
+{
+  "username": "approver",
+  "password": "approverPassword"
+}
+Expected: 200, status true, role = APPROVER
+
+2) Claims - primary approver actions
+GET /api/claims
+GET /api/claims/{claimId}
+GET /api/claims/user/{userId}
+GET /api/claims/status/{status}
+
+PUT /api/claims/{claimId}/approve
+Body:
+{
+  "approvedAmount": 8500,
+  "approverComment": "Approved with adjustments"
+}
+Expected: 200, claim approved
+
+PUT /api/claims/{claimId}/reject
+Body:
+{
+  "rejectionReason": "Missing documents"
+}
+Expected: 200, claim rejected
+
+PATCH /api/claims/{claimId}
+Body example:
+{
+  "approvedAmount": 9000,
+  "claimStatus": "APPROVED"
+}
+Expected: 200
+
+DELETE /api/claims/{claimId}
+Expected: 200
+
+3) Allowed GET endpoints for data review
+GET /api/users
+GET /api/users/{userId}
+GET /api/users/role/{role}
+GET /api/policies
+GET /api/policies/{policyId}
+GET /api/hospitals
+GET /api/hospitals/{hospitalId}
+GET /api/doctors
+GET /api/doctors/{doctorId}
+GET /api/treatments
+GET /api/treatments/{treatmentId}
+GET /api/payments
+GET /api/payments/{paymentId}
+GET /api/payments/status/{paymentStatus}
+GET /api/user-policies
+GET /api/user-policies/{userPolicyId}
+GET /api/user-policies/user/{userId}
+
+NOTE: Current security configuration grants authenticated users access to GET endpoints across resources.
+
+4) Useful request samples
+- Fetch claims for a specific user:
+GET /api/claims/user/2
+
+- Fetch all approved claims:
+GET /api/claims/status/APPROVED
+
+- Process a claim:
+PUT /api/claims/5/approve
+Body:
+{
+  "approvedAmount": 9500,
+  "approverComment": "Approved after review"
+}
+
+- Reject a claim:
+PUT /api/claims/5/reject
+Body:
+{
+  "rejectionReason": "Not covered by policy"
+}

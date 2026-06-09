@@ -1,0 +1,66 @@
+Users Module - Postman Methods
+=============================
+
+Base URL: /api/users
+
+1. POST /api/users/login
+   - Description: Login user with username and password.
+   - Body Example:
+     {
+       "username": "user1",
+       "password": "password"
+     }
+   - Role: public
+
+2. GET /api/users
+   - Description: Get all users.
+   - Role: ADMIN
+
+3. GET /api/users/{userId}
+   - Description: Get user details by ID.
+   - Role: authenticated
+
+4. GET /api/users/role/{role}
+   - Description: Get users by role (ADMIN, APPROVER, POLICYHOLDER).
+   - Role: authenticated
+
+5. POST /api/users
+   - Description: Create a new user.
+   - Role: ADMIN
+   - Body Example:
+     {
+       "username": "policyuser1",
+       "password": "Secret123!",
+       "fullName": "Priya Joshi",
+       "email": "priya.joshi@example.com",
+       "phoneNumber": "9876501234",
+       "dateOfBirth": "1990-05-20",
+       "address": "45 Green Street, Mumbai",
+       "role": "POLICYHOLDER",
+       "accountStatus": "ACTIVE",
+       "bankAccountNumber": "2222333344445555",
+       "ifscCode": "ICIC0001234",
+       "bankName": "ICICI Bank"
+     }
+
+6. PUT /api/users/{userId}
+   - Description: Update user profile or role-dependent details.
+   - Role: authenticated
+   - Body Example:
+     {
+       "fullName": "Priya K. Joshi",
+       "email": "priya.k.joshi@example.com",
+       "address": "45 Green Street, Mumbai"
+     }
+
+7. PATCH /api/users/{userId}
+   - Description: Partially update user details.
+   - Role: authenticated
+   - Body Example:
+     {
+       "phoneNumber": "9876500000"
+     }
+
+8. DELETE /api/users/{userId}
+   - Description: Delete user.
+   - Role: ADMIN

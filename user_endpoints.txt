@@ -1,0 +1,121 @@
+Base URL: http://localhost:8989
+
+Authentication:
+- Use Basic Auth for authenticated calls (username/password).
+- Login endpoint (/api/users/login) is public.
+
+Login response format:
+{
+  "message": "...",
+  "status": true|false,
+  "role": "ADMIN|APPROVER|POLICYHOLDER|null"
+}
+
+General API response format:
+{
+  "message": "...",
+  "status": true|false,
+  "data": ...
+}
+
+---
+USER (POLICYHOLDER) Endpoints
+---
+
+1) Login
+POST /api/users/login
+Body:
+{
+  "username": "user1",
+  "password": "userPassword"
+}
+Expected: 200, status true, role = POLICYHOLDER
+
+2) Claims
+GET /api/claims
+GET /api/claims/{claimId}
+GET /api/claims/user/{userId}
+GET /api/claims/status/{status}
+
+POST /api/claims
+Body example:
+{
+  "claimNumber": "CLM9001",
+  "claimAmount": 12000,
+  "user": { "userId": 2 },
+  "treatment": {
+    "diagnosis": "Dental surgery",
+    "treatmentDescription": "Emergency dental extraction",
+    "treatmentAmount": 12000,
+    "treatmentDate": "2024-06-20",
+    "hospitalName": "Metro Dental Center",
+    "hospitalAddress": "456 Care Ave",
+    "hospitalPhone": "555-6612",
+    "doctorName": "Dr. Nina Patel",
+    "doctorSpecialization": "Dentistry",
+    "doctorQualification": "DDS",
+    "doctorExperienceYears": 10
+  },
+  "insurancePolicy": { "policyId": 1 }
+}
+Expected: 201, data = created claim
+
+PATCH /api/claims/{claimId}
+Body example:
+{
+  "claimAmount": 11000
+}
+Expected: 200 if allowed
+
+DELETE /api/claims/{claimId}
+Expected: 200
+
+3) Fetch available data (authenticated GET access)
+GET /api/users/{userId}
+GET /api/policies
+GET /api/policies/{policyId}
+GET /api/hospitals
+GET /api/hospitals/{hospitalId}
+GET /api/doctors
+GET /api/doctors/{doctorId}
+GET /api/treatments
+GET /api/treatments/{treatmentId}
+GET /api/payments
+GET /api/payments/{paymentId}
+GET /api/payments/status/{paymentStatus}
+GET /api/user-policies
+GET /api/user-policies/{userPolicyId}
+GET /api/user-policies/user/{userId}
+
+4) Example flows
+- Authenticate with Basic Auth using user credentials.
+- Create a claim:
+POST /api/claims
+Body:
+{
+  "claimNumber": "CLM1002",
+  "claimAmount": 5000,
+  "user": { "userId": 2 },
+  "treatment": {
+    "diagnosis": "Back Pain",
+    "treatmentDescription": "Outpatient therapy session",
+    "treatmentAmount": 5000,
+    "treatmentDate": "2024-06-12",
+    "hospitalName": "Northside Medical Center",
+    "hospitalAddress": "321 Wellness Way",
+    "hospitalPhone": "555-2234",
+    "doctorName": "Dr. Mia Johnson",
+    "doctorSpecialization": "Physiotherapy",
+    "doctorQualification": "DPT",
+    "doctorExperienceYears": 6
+  },
+  "insurancePolicy": { "policyId": 2 }
+}
+
+- Check claim status:
+GET /api/claims/user/2
+
+- Fetch your policies:
+GET /api/user-policies/user/2
+
+NOTE: The backend uses Basic Auth; include the Authorization header for all non-login calls.

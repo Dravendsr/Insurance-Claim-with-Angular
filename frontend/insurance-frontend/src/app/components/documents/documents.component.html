@@ -1,0 +1,116 @@
+<section class="page card">
+  <h2>Uploaded Documents</h2>
+  <p class="subtitle">Manage and review uploaded claim documents.</p>
+  <div *ngIf="loading" class="status">Loading documents...</div>
+  <div *ngIf="error" class="status error">{{ error }}</div>
+
+  <ng-container *ngIf="!loading && !error">
+    <ng-container *ngIf="auth.role === 'APPROVER'; else regularDocuments">
+      <div class="approver-documents">
+        <div class="claim-picker-row">
+          <label for="claimSelect">Select claim to review documents:</label>
+          <select id="claimSelect" (change)="onClaimChange($event)">
+            <option value="" disabled selected>Select a claim</option>
+            <option *ngFor="let claim of approverClaims" [value]="claim.claimId">
+              {{ claim.claimNumber || ('Claim #' + claim.claimId) }} - {{ claim.claimStatus }}
+            </option>
+          </select>
+        </div>
+
+        <div *ngIf="selectedClaim" class="selected-claim-summary">
+          <p><strong>Claim:</strong> {{ selectedClaim.claimNumber || selectedClaim.claimId }}</p>
+          <p><strong>Status:</strong> {{ selectedClaim.claimStatus }}</p>
+          <p><strong>Policyholder:</strong> {{ selectedClaim.user?.fullName || selectedClaim.user?.username || 'Unknown' }}</p>
+        </div>
+
+        <table *ngIf="selectedDocuments.length" class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Document Name</th>
+              <th>Type</th>
+              <th>Uploaded Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let document of selectedDocuments; index as i">
+              <td>{{ i + 1 }}</td>
+              <td>{{ document.documentName }}</td>
+              <td>{{ document.documentType }}</td>
+              <td>{{ document.uploadedDate }}</td>
+              <td>
+                <button
+                  *ngIf="document.documentPath"
+                  type="button"
+                  class="action-button view-button"
+                  (click)="viewDocument(document)"
+                >
+                  View
+                </button>
+                <button
+                  *ngIf="document.documentPath"
+                  type="button"
+                  class="action-button download-button"
+                  (click)="downloadDocument(document)"
+                >
+                  Download
+                </button>
+                <span *ngIf="!document.documentPath" class="no-action">No preview available</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div *ngIf="!selectedClaim" class="status">Select a claim from the dropdown to see its documents.</div>
+        <div *ngIf="selectedClaim && !selectedDocuments.length" class="status">No documents uploaded for this claim.</div>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #regularDocuments>
+    <table *ngIf="!loading && !error && documents.length" class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Claim</th>
+          <th>Document Name</th>
+          <th>Type</th>
+          <th>Uploaded Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let document of documents; index as i">
+          <td>{{ i + 1 }}</td>
+          <td>{{ document.claimNumber || document.claimId || 'N/A' }}</td>
+          <td>{{ document.documentName }}</td>
+          <td>{{ document.documentType }}</td>
+          <td>{{ document.uploadedDate }}</td>
+          <td>
+            <button
+              *ngIf="document.documentPath"
+              type="button"
+              class="action-button view-button"
+              (click)="viewDocument(document)"
+            >
+              View
+            </button>
+            <button
+              *ngIf="document.documentPath"
+              type="button"
+              class="action-button download-button"
+              (click)="downloadDocument(document)"
+            >
+              Download
+            </button>
+            <span *ngIf="!document.documentPath" class="no-action">No preview available</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="!loading && !error && !documents.length" class="status">
+      No documents found.
+    </div>
+  </ng-template>
+</section>

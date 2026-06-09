@@ -1,0 +1,46 @@
+Hospitals Module - Postman Methods
+================================
+
+Base URL: /api/hospitals
+
+1. GET /api/hospitals
+   - Description: Get all hospitals.
+   - Role: authenticated
+
+2. GET /api/hospitals/{hospitalId}
+   - Description: Get hospital details by ID.
+   - Role: authenticated
+
+3. POST /api/hospitals
+   - Description: Create a new hospital.
+   - Role: ADMIN
+   - Body Example:
+     {
+       "hospitalName": "City Care Hospital",
+       "hospitalType": "Private",
+       "address": "123 Health Ave, Pune",
+       "phoneNumber": "9876543210"
+     }
+
+4. PUT /api/hospitals/{hospitalId}
+   - Description: Update hospital details.
+   - Role: ADMIN
+   - Body Example:
+     {
+       "hospitalName": "City Care Hospital",
+       "hospitalType": "Private",
+       "address": "123 Health Ave, Pune",
+       "phoneNumber": "9876543210"
+     }
+
+5. PATCH /api/hospitals/{hospitalId}
+   - Description: Partially update hospital details.
+   - Role: ADMIN
+   - Body Example:
+     {
+       "phoneNumber": "9998887776"
+     }
+
+6. DELETE /api/hospitals/{hospitalId}
+   - Description: Delete hospital.
+   - Role: ADMIN

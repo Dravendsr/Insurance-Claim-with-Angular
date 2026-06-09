@@ -1,0 +1,52 @@
+Treatments Module - Postman Methods
+===================================
+
+Base URL: /api/treatments
+
+1. GET /api/treatments
+   - Description: Get all treatments.
+   - Role: authenticated
+
+2. GET /api/treatments/{treatmentId}
+   - Description: Get treatment details by ID.
+   - Role: authenticated
+
+3. POST /api/treatments
+   - Description: Create a new treatment record.
+   - Role: authenticated
+   - Body Example:
+     {
+       "diagnosis": "Pneumonia",
+       "treatmentDescription": "Respiratory care and medication",
+       "treatmentAmount": 12000.0,
+       "treatmentDate": "2024-10-10",
+       "user": { "userId": 4 },
+       "doctor": { "doctorId": 2 },
+       "hospital": { "hospitalId": 1 }
+     }
+
+4. PUT /api/treatments/{treatmentId}
+   - Description: Update treatment details.
+   - Role: authenticated
+   - Body Example:
+     {
+       "diagnosis": "Pneumonia",
+       "treatmentDescription": "Updated respiratory care and medication",
+       "treatmentAmount": 12500.0,
+       "treatmentDate": "2024-10-10",
+       "user": { "userId": 4 },
+       "doctor": { "doctorId": 2 },
+       "hospital": { "hospitalId": 1 }
+     }
+
+5. PATCH /api/treatments/{treatmentId}
+   - Description: Partially update treatment details.
+   - Role: authenticated
+   - Body Example:
+     {
+       "treatmentAmount": 12500.0
+     }
+
+6. DELETE /api/treatments/{treatmentId}
+   - Description: Delete treatment.
+   - Role: authenticated

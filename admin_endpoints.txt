@@ -1,0 +1,305 @@
+Base URL: http://localhost:8989
+
+Authentication:
+- Use Basic Auth for authenticated calls (username/password).
+- Login endpoint (/api/users/login) is public.
+
+Login response format:
+{
+  "message": "...",
+  "status": true|false,
+  "role": "ADMIN|APPROVER|POLICYHOLDER|null"
+}
+
+General API response format:
+{
+  "message": "...",
+  "status": true|false,
+  "data": ...
+}
+
+---
+ADMIN Endpoints
+---
+
+1) Login
+POST /api/users/login
+Body (JSON):
+{
+  "username": "admin",
+  "password": "adminPassword"
+}
+Expected: 200, status true, role = ADMIN
+
+2) Users
+GET /api/users
+- Fetch all users
+
+GET /api/users/{userId}
+- Fetch single user
+
+GET /api/users/role/{role}
+- Example: /api/users/role/APPROVER
+
+POST /api/users
+Body example:
+{
+  "username": "newuser",
+  "password": "secret",
+  "fullName": "New User",
+  "email": "newuser@example.com",
+  "phoneNumber": "9999999999",
+  "dateOfBirth": "1990-01-01",
+  "address": "123 Main St",
+  "role": "POLICYHOLDER",
+  "accountStatus": "ACTIVE",
+  "bankAccountNumber": "1234567890",
+  "ifscCode": "BANK0001",
+  "bankName": "Test Bank"
+}
+Expected: 201, data = created user
+
+PUT /api/users/{userId}
+Body example: full update payload like POST body
+Expected: 200, data = updated user
+
+PATCH /api/users/{userId}
+Body example: partial update
+{
+  "phoneNumber": "8888888888",
+  "accountStatus": "INACTIVE"
+}
+Expected: 200, data = patched user
+
+DELETE /api/users/{userId}
+Expected: 200 when deleted, 404 if missing
+
+3) Policies
+GET /api/policies
+GET /api/policies/{policyId}
+
+POST /api/policies
+Body example:
+{
+  "policyNumber": "POL123",
+  "policyName": "Health Plan A",
+  "policyType": "Individual",
+  "coverageAmount": 50000,
+  "premiumAmount": 2000,
+  "benefits": "Basic coverage",
+  "policyStatus": "ACTIVE",
+  "startDate": "2026-06-01",
+  "endDate": "2027-06-01"
+}
+Expected: 201, data = created policy
+
+PUT /api/policies/{policyId}
+Body example: full policy payload
+Expected: 200, data = updated policy
+
+PATCH /api/policies/{policyId}
+Body example:
+{
+  "premiumAmount": 2200,
+  "endDate": "2028-06-01"
+}
+Expected: 200, data = patched policy
+
+DELETE /api/policies/{policyId}
+Expected: 200 when deleted
+
+4) Hospitals
+GET /api/hospitals
+GET /api/hospitals/{hospitalId}
+
+POST /api/hospitals
+Body example:
+{
+  "hospitalName": "City Hospital",
+  "address": "123 Health Ave",
+  "city": "Metropolis",
+  "state": "State",
+  "phoneNumber": "8887776666"
+}
+Expected: 201, data = created hospital
+
+PUT /api/hospitals/{hospitalId}
+Body example: full hospital payload
+Expected: 200
+
+PATCH /api/hospitals/{hospitalId}
+Body example:
+{
+  "address": "456 New Address"
+}
+Expected: 200
+
+DELETE /api/hospitals/{hospitalId}
+Expected: 200
+
+5) Doctors
+GET /api/doctors
+GET /api/doctors/{doctorId}
+
+POST /api/doctors
+Body example:
+{
+  "doctorName": "Dr. Smith",
+  "specialization": "Cardiology",
+  "experienceYears": 10,
+  "hospital": { "hospitalId": 1 }
+}
+Expected: 201
+
+PUT /api/doctors/{doctorId}
+Body example: full doctor payload
+Expected: 200
+
+PATCH /api/doctors/{doctorId}
+Body example:
+{
+  "experienceYears": 12
+}
+Expected: 200
+
+DELETE /api/doctors/{doctorId}
+Expected: 200
+
+6) Treatments
+GET /api/treatments
+GET /api/treatments/{treatmentId}
+
+POST /api/treatments
+Body example:
+{
+  "treatmentName": "Appendectomy",
+  "treatmentCost": 15000,
+  "doctor": { "doctorId": 1 },
+  "hospital": { "hospitalId": 1 },
+  "user": { "userId": 2 }
+}
+Expected: 201
+
+PUT /api/treatments/{treatmentId}
+Body example: full treatment payload
+Expected: 200
+
+PATCH /api/treatments/{treatmentId}
+Body example:
+{
+  "treatmentCost": 16000
+}
+Expected: 200
+
+DELETE /api/treatments/{treatmentId}
+Expected: 200
+
+7) Claims
+GET /api/claims
+GET /api/claims/{claimId}
+GET /api/claims/user/{userId}
+GET /api/claims/status/{status}
+
+POST /api/claims
+Body example:
+{
+  "claimNumber": "CLM001",
+  "claimAmount": 10000,
+  "user": { "userId": 2 },
+  "treatment": {
+    "diagnosis": "Minor surgery",
+    "treatmentDescription": "Outpatient procedure and follow-up",
+    "treatmentAmount": 10000,
+    "treatmentDate": "2024-06-18",
+    "hospitalName": "Community Health Center",
+    "hospitalAddress": "789 Wellness Rd",
+    "hospitalPhone": "555-4321",
+    "doctorName": "Dr. Samuel Lee",
+    "doctorSpecialization": "General Surgery",
+    "doctorQualification": "MBBS",
+    "doctorExperienceYears": 15
+  },
+  "insurancePolicy": { "policyId": 1 }
+}
+Expected: 201
+
+PUT /api/claims/{claimId}/approve
+Body example:
+{
+  "approvedAmount": 9000,
+  "approverComment": "Partial approval"
+}
+Expected: 200, data = approved claim
+
+PUT /api/claims/{claimId}/reject
+Body example:
+{
+  "rejectionReason": "Incomplete documents"
+}
+Expected: 200, data = rejected claim
+
+PATCH /api/claims/{claimId}
+Body example:
+{
+  "claimStatus": "PENDING",
+  "approvedAmount": 9000
+}
+Expected: 200
+
+DELETE /api/claims/{claimId}
+Expected: 200
+
+8) Payments
+GET /api/payments
+GET /api/payments/{paymentId}
+GET /api/payments/status/{paymentStatus}
+
+POST /api/payments
+Body example:
+{
+  "paymentAmount": 9000,
+  "paymentMode": "Online",
+  "transactionId": "TXN12345",
+  "paymentStatus": "PENDING",
+  "companyAccountNumber": "COMP123",
+  "companyBankName": "Company Bank",
+  "claim": { "claimId": 1 },
+  "user": { "userId": 1 }
+}
+Expected: 201
+
+PUT /api/payments/{paymentId}/process
+Expected: 200, payment becomes COMPLETED and related claim becomes SETTLED
+
+DELETE /api/payments/{paymentId}
+Expected: 200
+
+9) User Policies
+GET /api/user-policies
+GET /api/user-policies/{userPolicyId}
+GET /api/user-policies/user/{userId}
+
+POST /api/user-policies
+Body example:
+{
+  "user": { "userId": 2 },
+  "insurancePolicy": { "policyId": 1 },
+  "purchasedDate": "2026-06-01",
+  "expiryDate": "2027-06-01",
+  "policyActiveStatus": "ACTIVE"
+}
+Expected: 201
+
+PUT /api/user-policies/{userPolicyId}
+Body example: full user policy payload
+Expected: 200
+
+PATCH /api/user-policies/{userPolicyId}
+Body example:
+{
+  "expiryDate": "2027-12-31"
+}
+Expected: 200
+
+DELETE /api/user-policies/{userPolicyId}
+Expected: 200

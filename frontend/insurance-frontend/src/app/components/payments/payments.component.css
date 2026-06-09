@@ -1,0 +1,255 @@
+.page {
+  padding: 1.5rem;
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+h2 {
+  margin-top: 0;
+}
+
+.subtitle {
+  margin: 0.5rem 0 1rem;
+  color: #4b5563;
+}
+
+table.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table.data-table th,
+ table.data-table td {
+  padding: 0.85rem 1rem;
+  border: 1px solid #e5e7eb;
+}
+
+.secondary-button {
+  border: 1px solid #1d4ed8;
+  background: #2563eb;
+  color: #ffffff;
+  border-radius: 0.75rem;
+  padding: 0.65rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 3px rgba(37, 99, 235, 0.25);
+}
+
+.secondary-button:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.secondary-button:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.45);
+  outline-offset: 2px;
+}
+
+.flash-message {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  margin-top: 1rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+
+.flash-message.success {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+
+.flash-message.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+
+.status {
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 0.75rem;
+  background: #eef2ff;
+}
+
+.status.error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.tab-bar {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.tab-button {
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #0f172a;
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.tab-button.active {
+  background: #1d4ed8;
+  color: white;
+  border-color: #1e40af;
+}
+
+.section-title {
+  margin-top: 1rem;
+  margin-bottom: 0.75rem;
+  color: #0f172a;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.status-pill.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-pill.completed {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-pill.unknown {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.primary-button {
+  border: none;
+  background: #2563eb;
+  color: white;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-weight: 700;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.primary-button:hover {
+  transform: translateY(-1px);
+}
+
+.primary-button:focus-visible,
+.secondary-button:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.45);
+  outline-offset: 2px;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 1000;
+}
+
+.gateway-modal,
+.receive-modal {
+  width: min(560px, 100%);
+  background: var(--surface);
+  border-radius: 1rem;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.gateway-header,
+.receive-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--surface-strong);
+}
+
+.gateway-header h3,
+.receive-header h3 {
+  margin: 0;
+}
+
+.gateway-header .eyebrow,
+.receive-header .eyebrow {
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  color: var(--primary);
+}
+
+.gateway-body,
+.receive-body {
+  padding: 1.5rem;
+}
+
+.gateway-note {
+  margin: 0 0 1rem;
+  color: var(--muted);
+}
+
+.gateway-info {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  color: var(--text);
+}
+
+.gateway-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.close-button {
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+.gateway-result {
+  text-align: center;
+}
+
+.gateway-result .icon {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 1rem;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-size: 1.5rem;
+}
+
+.gateway-result.success .icon {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.gateway-result.error .icon {
+  background: var(--error-soft);
+  color: var(--error);
+}

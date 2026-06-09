@@ -1,0 +1,136 @@
+.dashboard-page {
+  display: grid;
+  gap: 1.8rem;
+}
+
+.dashboard-hero {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.12), rgba(31, 41, 55, 0.1));
+  border-radius: 1.75rem;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.dashboard-hero .eyebrow {
+  margin: 0 0 0.8rem;
+  color: var(--primary);
+}
+
+.dashboard-hero h2 {
+  margin: 0;
+  font-size: 2.1rem;
+}
+
+.dashboard-hero .description {
+  margin: 1rem 0 0;
+  color: var(--muted);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  align-items: center;
+}
+
+.hero-actions button {
+  border: none;
+  border-radius: 1rem;
+  padding: 0.95rem 1.4rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hero-actions button:first-child {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.hero-actions button.secondary {
+  background: var(--surface-strong);
+  color: var(--text);
+}
+
+.dashboard-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+}
+
+.metric-card {
+  background: var(--surface);
+  padding: 1.5rem;
+  border-radius: 1.4rem;
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--border);
+}
+
+.metric-card p {
+  margin: 0;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+}
+
+.metric-card strong {
+  display: block;
+  margin: 1rem 0 0.4rem;
+  font-size: 2rem;
+}
+
+.metric-card span {
+  color: var(--muted);
+}
+
+.dashboard-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.dashboard-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 200px;
+  padding: 1.8rem;
+  border-radius: 1.5rem;
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid var(--border);
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(79,70,229,0.35);
+}
+
+.dashboard-card h3 {
+  margin: 0 0 0.8rem;
+}
+
+.dashboard-card p {
+  margin: 0;
+  color: var(--muted);
+  flex: 1;
+}
+
+.card-action {
+  margin-top: 1.4rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+@media (max-width: 950px) {
+  .dashboard-metrics {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,119 @@
+<div class="analytics-page">
+  <div class="analytics-header">
+    <h2>{{ heading }}</h2>
+    <p>Overview of claims, policies, payments, and users for administrative review.</p>
+  </div>
+
+  <div *ngIf="isLoading" class="analytics-loading">
+    Loading analytics...
+  </div>
+
+  <div *ngIf="!isLoading && errorMessage" class="analytics-error">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage" class="analytics-layout">
+    <div class="analytics-summary">
+      <div class="analytics-card">
+        <h3>Total Claims</h3>
+        <p>{{ totalClaims }}</p>
+      </div>
+      <div class="analytics-card">
+        <h3>Pending Claims</h3>
+        <p>{{ pendingClaims }}</p>
+      </div>
+      <div class="analytics-card">
+        <h3>Approved Claims</h3>
+        <p>{{ approvedClaims }}</p>
+      </div>
+      <div class="analytics-card">
+        <h3>Rejected Claims</h3>
+        <p>{{ rejectedClaims }}</p>
+      </div>
+      <div class="analytics-card">
+        <h3>Total Approved Amount</h3>
+        <p>{{ totalApprovedAmount | number:'1.0-0' }}</p>
+      </div>
+      <div class="analytics-card">
+        <h3>Total Paid Amount</h3>
+        <p>{{ totalPaidAmount | number:'1.0-0' }}</p>
+      </div>
+    </div>
+
+    <div class="analytics-charts">
+      <div class="chart-card breakdown-card">
+        <h3>Claims Breakdown</h3>
+        <div class="breakdown-grid">
+          <div class="breakdown-stat">
+            <span>Total</span>
+            <strong>{{ totalClaims }}</strong>
+          </div>
+          <div class="breakdown-stat">
+            <span>Pending</span>
+            <strong>{{ pendingClaims }}</strong>
+          </div>
+          <div class="breakdown-stat">
+            <span>Resolved</span>
+            <strong>{{ approvedClaims + rejectedClaims }}</strong>
+          </div>
+        </div>
+        <div class="breakdown-bars">
+          <div class="breakdown-row">
+            <div>
+              <div class="breakdown-label">Approved</div>
+              <div class="breakdown-track"><div class="breakdown-fill approved" [style.width.%]="claimPercentages.approved"></div></div>
+            </div>
+            <strong>{{ approvedClaims }}</strong>
+          </div>
+          <div class="breakdown-row">
+            <div>
+              <div class="breakdown-label">Pending</div>
+              <div class="breakdown-track"><div class="breakdown-fill pending" [style.width.%]="claimPercentages.pending"></div></div>
+            </div>
+            <strong>{{ pendingClaims }}</strong>
+          </div>
+          <div class="breakdown-row">
+            <div>
+              <div class="breakdown-label">Rejected</div>
+              <div class="breakdown-track"><div class="breakdown-fill rejected" [style.width.%]="claimPercentages.rejected"></div></div>
+            </div>
+            <strong>{{ rejectedClaims }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-card pie-card">
+        <h3>Claim Status Distribution</h3>
+        <div class="pie-visual">
+          <div class="pie-ring" [style.background]="pieGradient"></div>
+          <div class="pie-label">
+            {{ totalClaims }} total
+          </div>
+        </div>
+        <div class="pie-legend">
+          <div><span class="legend-color approved"></span> Approved {{ claimPercentages.approved | number:'1.0-0' }}%</div>
+          <div><span class="legend-color pending"></span> Pending {{ claimPercentages.pending | number:'1.0-0' }}%</div>
+          <div><span class="legend-color rejected"></span> Rejected {{ claimPercentages.rejected | number:'1.0-0' }}%</div>
+        </div>
+      </div>
+
+      <div class="chart-card bar-card">
+        <h3>Payment / Approval Comparison</h3>
+        <div class="bar-row">
+          <span>Approved Amount</span>
+          <div class="bar-track">
+            <div class="bar-fill approved" [style.width.%]="approvedAmountWidth"></div>
+          </div>
+          <strong>{{ totalApprovedAmount | number:'1.0-0' }}</strong>
+        </div>
+        <div class="bar-row">
+          <span>Paid Amount</span>
+          <div class="bar-track">
+            <div class="bar-fill paid" [style.width.%]="paidAmountWidth"></div>
+          </div>
+          <strong>{{ totalPaidAmount | number:'1.0-0' }}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

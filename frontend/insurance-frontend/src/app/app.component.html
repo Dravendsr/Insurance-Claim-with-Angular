@@ -1,0 +1,68 @@
+<div class="app-container" [class.dark-mode]="darkMode">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark">IC</div>
+      <div>
+        <p class="brand-title">InsureSecure </p>
+        <p class="brand-tag">Claim management</p>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" *ngIf="auth.isAuthenticated()">
+      <a routerLink="/user-details" routerLinkActive="active">My Profile</a>
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/new-claim" routerLinkActive="active" *ngIf="auth.role === 'POLICYHOLDER'">New Claim</a>
+      <a routerLink="/claims" routerLinkActive="active">{{ auth.role === 'POLICYHOLDER' ? 'My Claims' : 'Claims' }}</a>
+      <a routerLink="/policies" routerLinkActive="active">{{ auth.role === 'POLICYHOLDER' ? 'My Policies' : 'Policies' }}</a>
+      <a routerLink="/approver/dashboard" routerLinkActive="active" *ngIf="auth.role === 'APPROVER'">Approver Works</a>
+      <a routerLink="/approver/pending" routerLinkActive="active" *ngIf="auth.role === 'APPROVER'">Pending Claims</a>
+      <a routerLink="/documents" routerLinkActive="active" *ngIf="auth.role !== 'ADMIN'">Documents</a>
+      <a routerLink="/payments" routerLinkActive="active" *ngIf="auth.role === 'POLICYHOLDER' || auth.role === 'ADMIN'">Payments</a>
+      <a routerLink="/users" routerLinkActive="active" *ngIf="auth.role === 'ADMIN'">Users</a>
+      <a routerLink="/analytics" routerLinkActive="active" *ngIf="auth.role === 'ADMIN'">Analytics</a>
+    </nav>
+
+    <div class="sidebar-footer" *ngIf="auth.isAuthenticated()">
+      <button class="theme-toggle" (click)="toggleDarkMode()" aria-label="Toggle theme">
+        {{ darkMode ? '☀' : '🌙' }}
+      </button>
+      <button class="logout-button" (click)="logout()">Sign out</button>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        
+        <div>
+          <p class="eyebrow">Welcome back</p>
+          <h1>{{ auth.isAuthenticated() ? 'Hello, ' + displayRole : title }}</h1>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="secondary-button" (click)="toggleDarkMode()" aria-label="Toggle theme">
+          {{ darkMode ? '☀' : '🌙' }}
+        </button>
+      </div>
+    </header>
+
+    <div class="profile-popup" *ngIf="showProfileMenu && auth.isAuthenticated()">
+      <div class="popup-content">
+        <div class="popup-avatar">{{ auth.username ? auth.username.charAt(0).toUpperCase() : '?' }}</div>
+        <div>
+          <p class="popup-name">{{ auth.username || 'User' }}</p>
+          <p class="popup-role">{{ displayRole || 'Guest' }}</p>
+        </div>
+      </div>
+      <div class="popup-actions">
+        <a routerLink="/dashboard">Dashboard</a>
+        <a routerLink="/policies">Policies</a>
+        <a routerLink="/analytics" *ngIf="auth.role === 'ADMIN'">Analytics</a>
+      </div>
+    </div>
+
+    <main class="app-shell">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

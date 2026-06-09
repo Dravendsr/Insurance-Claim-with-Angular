@@ -1,0 +1,31 @@
+Role Responsibilities and Outcomes
+
+ADMIN
+- Manage users: create, update, delete, and assign roles
+- Manage insurance policies: create new policies, update policy details, and track expiration
+- Manage hospitals and doctors: maintain provider directories for reporting and analytics
+- Process payments: settle approved reimbursement claims and mark payments completed
+- View claims: access all claims, including pending, approved, rejected, and settled
+- Access analytics dashboard: review claim trends, hospital and doctor performance, and high-risk users
+
+APPROVER
+- View pending claims: access reimbursement claims waiting for review
+- Verify treatment details: confirm diagnosis, treatment description, amount, and date
+- Verify hospital information: review hospital name, address, and contact details
+- Verify doctor information: review doctor name, specialization, qualification, and experience
+- Verify uploaded documents: validate medical reports, prescriptions, bills, and receipts
+- Review recommendation score: use advisory recommendation status and reasons as guidance
+- Approve claims: authorize approved reimbursement claims for payment processing
+- Reject claims with comments: provide rejection reasons and feedback for denied claims
+
+POLICYHOLDER
+- Submit reimbursement claims: raise claims after paying for treatment outside the system
+- Enter treatment information: provide diagnosis, treatment details, provider name, and expense data
+- Upload supporting documents: submit medical reports, prescriptions, bills, and receipts
+- Track claim status: follow the lifecycle of the claim through pending, approved, rejected, and settled
+- View claim decisions: review approver feedback, approval amounts, or rejection reasons
+
+Outcomes by Role
+- ADMIN makes system configuration, policy maintenance, user and provider administration, payment settlement, and analytics review.
+- APPROVER makes claim decisions, validates claim evidence, and applies final approval or rejection.
+- POLICYHOLDER makes reimbursement submissions, supplies treatment evidence, and monitors claim progress.

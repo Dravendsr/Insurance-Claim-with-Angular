@@ -1,0 +1,48 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Insurance Claims</h2>
+  
+  @if (loading()) {
+    <div class="text-center p-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger">{{ errorMessage() }}</div>
+  }
+
+  @if (!loading() && !errorMessage()) {
+    <table class="table table-striped table-hover shadow-sm">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Policy</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (claim of claims(); track claim.claimId) {
+          <tr>
+            <td>{{ claim.claimId }}</td>
+            <td>{{ claim.insurancePolicy?.policyName }}</td>
+            <td>{{ claim.claimAmount | currency:'INR':'symbol':'1.0-0' }}</td>
+            <td>
+              <span class="badge" [ngClass]="{
+                'bg-warning text-dark': claim.claimStatus === 'PENDING',
+                'bg-success': claim.claimStatus === 'APPROVED' || claim.claimStatus === 'SETTLED',
+                'bg-danger': claim.claimStatus === 'REJECTED'
+              }">{{ claim.claimStatus }}</span>
+            </td>
+            <td>{{ claim.claimDate | date:'mediumDate' }}</td>
+          </tr>
+        } @empty {
+          <tr><td colspan="5" class="text-center p-4">No claims found in the database.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

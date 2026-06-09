@@ -1,0 +1,169 @@
+Special Backend Feature
+The special backend feature is the claim recommendation + admin analytics capability.
+
+What it is
+Located in:
+ClaimServiceImpl.java
+AdminAnalyticsController.java
+ClaimRepository.java
+Claim.java (entity)
+
+What it does
+Automatic claim recommendation scoring
+
+Every time a claim is saved or updated, ClaimServiceImpl.calculateRecommendation(...) runs.
+It computes a recommendationScore and sets:
+recommendationStatus to APPROVE, REVIEW, or REJECT
+recommendationReason with explanation text
+The scoring is based on:
+policy validity / active policy status
+whether supporting documents are attached
+claim amount vs treatment cost
+coverage limit usage
+user claim history risk
+repeated diagnosis patterns within 180 days
+
+Admin analytics endpoints
+
+AdminAnalyticsController exposes analytics for admins at /api/admin/analytics/...
+It provides:
+overview metrics (/overview)
+total claims, approved/rejected/pending/settled counts
+approval/rejection percentages
+approved amount total, paid amount total
+top hospitals (/top-hospitals)
+top doctors (/top-doctors)
+high-risk users (/high-risk-users)
+treatment statistics (/treatment-statistics)
+recommendation summary (/recommendations)
+counts of claims recommended APPROVE, REVIEW, REJECT
+
+Why it is useful
+Helps the system make an automatic preliminary decision recommendation for each claim.
+Gives admins actionable analytics for claim trends, risk detection, and provider performance.
+Makes claim handling faster, more data-driven, and easier to monitor.
+
+BACKEND IMPROVEMENTS APPLIED
+===============================
+
+1. Added rejectedDate field to Claim entity
+   - New database column: rejectedDate (LocalDate, nullable)
+   - Stores the date when a claim is rejected
+   - Separates rejection timestamp from approval timestamp
+   - Maintains clean data audit trail
+
+2. Enhanced claimNumber validation
+   - Added validation to ensure claimNumber is not null or empty
+   - Added uniqueness check before saving new claims
+   - Prevents duplicate claim numbers at service level
+
+3. Fixed rejection logic
+   - Changed: rejectClaim() now sets rejectedDate instead of approvedDate
+   - Maintains proper semantic meaning of dates
+   - Ensures approval dates and rejection dates are separate
+
+4. Fixed policy expiration validation
+   - Changed: policy is valid if today is BEFORE OR EQUAL TO endDate
+   - Old logic: now.isBefore(endDate)
+   - New logic: !now.isAfter(endDate)
+   - Allows claims on the policy end date
+
+5. Improved analytics query accuracy
+   - Updated findTopHospitalsAnalytics() to group by hospitalId + name
+   - Updated findTopDoctorsAnalytics() to group by doctorId + name + specialization
+   - Prevents merging of hospitals/doctors with duplicate names
+   - Ensures accurate analytics aggregation
+
+In short
+The backend now has an improved claim recommendation engine + admin analytics dashboard with better data integrity, cleaner validation, and more accurate analytics.
+
+All changes are backward compatible and non-breaking to existing functionality.
+
+DATABASE SCHEMA VERIFICATION
+===============================
+
+✅ VERIFIED: All entity fields match the SQL schema
+
+ENTITIES CHECKED:
+1. User ✓ - All columns match
+2. InsurancePolicy ✓ - All columns match
+3. UserPolicy ✓ - All columns match
+4. Hospital ✓ - All columns match
+5. Doctor ✓ - All columns match
+6. Treatment ✓ - All columns including doctor/hospital denormalized fields match
+7. Claim ✓ - All columns including NEW rejected_date column added
+8. Document ✓ - All columns match
+9. Payment ✓ - All columns match
+
+DATABASE CHANGES MADE:
+✓ Added `rejected_date DATE` column to claims table in health_db_initialization.sql
+✓ Column is nullable to maintain backward compatibility
+✓ Properly positioned after approved_date for logical grouping
+
+SCHEMA CONSISTENCY:
+✓ All entity columns are present in SQL
+✓ All relationships are properly defined with foreign keys
+✓ All indexes are properly configured
+✓ No missing or extra columns
+✓ Data types match between entity and SQL
+
+The database initialization script is now fully aligned with all entity definitions.
+
+Raptor mini (Preview) • 1x
+
+
+
+Entity relationship check
+Yes — the backend JPA model is linked at the database level for the main claim workflow.
+
+Key entity links
+User
+@OneToMany → UserPolicy
+@OneToMany → Treatment
+@OneToMany → Claim
+InsurancePolicy
+@OneToMany → UserPolicy
+@OneToMany → Claim
+UserPolicy
+@ManyToOne → User
+@ManyToOne → InsurancePolicy
+Claim
+@ManyToOne → User
+@OneToOne → Treatment
+@ManyToOne → InsurancePolicy
+@ManyToOne → assignedApprover (User)
+@OneToMany → Document
+@OneToOne → Payment
+Treatment
+@ManyToOne → User
+@ManyToOne → Doctor
+@ManyToOne → Hospital
+@OneToOne → Claim
+Doctor
+@ManyToOne → Hospital
+@OneToMany → Treatment
+Hospital
+@OneToMany → Doctor
+@OneToMany → Treatment
+Document
+@ManyToOne → Claim
+Payment
+@OneToOne → Claim
+@ManyToOne → User
+What this means for your project description
+This model supports the core reimbursement flow:
+
+User login and user profile link
+User has policies (UserPolicy)
+Claim belongs to a user and a policy
+Claim contains a treatment
+Treatment links to doctor and hospital
+Claim can attach documents
+Claim result can produce payment
+Approver is represented by Claim.assignedApprover
+Important caveats
+The model does not have separate bill line-item tables; Treatment holds the treatment amount and description, not detailed room/bill item records.
+Documents are stored as metadata (documentPath, documentType) and linked to Claim; there is no actual file binary upload implementation in the entity model.
+There is no explicit duplicate-claim detection entity or table; duplicate logic would need to be implemented in service/controller logic.
+Bottom line
+The database-level entity graph is correctly linked for the main user/policy/claim/treatment/hospital/doctor/payment flow. It’s a good fit for your reimbursement claim management concept, with a few model-level limitations around detailed bill breakdown and real file upload storage.

@@ -1,0 +1,27 @@
+<section class="page card">
+  <h2>Treatment Records</h2>
+  <p class="subtitle">Review treatment details and costs.</p>
+  <div *ngIf="loading" class="status">Loading treatments...</div>
+  <div *ngIf="error" class="status error">{{ error }}</div>
+  <table *ngIf="!loading && !error && treatments.length" class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Description</th>
+        <th>Cost</th>
+        <th>Doctor ID</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let treatment of treatments; index as i">
+        <td>{{ i + 1 }}</td>
+        <td>{{ treatment.description }}</td>
+        <td>{{ treatment.cost | currency:'INR':'symbol':'1.0-0' }}</td>
+        <td>{{ treatment.doctorId }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="!loading && !error && !treatments.length" class="status">
+    No treatments found.
+  </div>
+</section>

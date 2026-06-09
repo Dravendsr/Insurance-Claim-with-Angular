@@ -1,0 +1,699 @@
+{
+  "info": {
+    "_postman_id": "health-insurance-claim-management-api",
+    "name": "Health Insurance Claim Management System API",
+    "description": "Complete API collection for HICMS backend",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": []
+  },
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin001\",\n  \"password\": \"password\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/users/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "users", "login"]
+            }
+          },
+          "response": [
+            {
+              "name": "Login Success",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"username\": \"admin001\", \"password\": \"password\"}"
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n  \"message\": \"Login successful\",\n  \"status\": true,\n  \"data\": {\n    \"userId\": 1,\n    \"username\": \"admin001\",\n    \"fullName\": \"Admin User\",\n    \"email\": \"admin@hicms.com\",\n    \"role\": \"ADMIN\",\n    \"accountStatus\": \"ACTIVE\"\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/users",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/users/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "users", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Users by Role",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/users/role/POLICYHOLDER",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "users", "role", "POLICYHOLDER"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"newuser\",\n  \"password\": \"password123\",\n  \"fullName\": \"New User\",\n  \"email\": \"newuser@email.com\",\n  \"phoneNumber\": \"9876543215\",\n  \"dateOfBirth\": \"1995-05-15\",\n  \"address\": \"123 New Street, City\",\n  \"role\": \"POLICYHOLDER\",\n  \"accountStatus\": \"ACTIVE\",\n  \"bankAccountNumber\": \"9876543210987654\",\n  \"ifscCode\": \"ICIC0000001\",\n  \"bankName\": \"ICICI Bank\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/users",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin001\",\n  \"fullName\": \"Updated Admin User\",\n  \"email\": \"admin@hicms.com\",\n  \"phoneNumber\": \"9876543210\",\n  \"dateOfBirth\": \"1980-08-15\",\n  \"address\": \"123 Admin Office Street, New York\",\n  \"role\": \"ADMIN\",\n  \"accountStatus\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/users/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "users", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/users/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "users", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Policies",
+      "item": [
+        {
+          "name": "Get All Policies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/policies",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "policies"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Policy by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/policies/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "policies", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Policy",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"policyNumber\": \"POL006\",\n  \"policyName\": \"New Health Plan\",\n  \"policyType\": \"Individual\",\n  \"coverageAmount\": 600000,\n  \"premiumAmount\": 20000,\n  \"benefits\": \"Comprehensive coverage for hospitalization and surgery\",\n  \"policyStatus\": \"ACTIVE\",\n  \"startDate\": \"2024-01-01\",\n  \"endDate\": \"2025-12-31\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/policies",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "policies"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Policy",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"policyNumber\": \"POL001\",\n  \"policyName\": \"Gold Health Plus Updated\",\n  \"policyType\": \"Individual\",\n  \"coverageAmount\": 550000,\n  \"premiumAmount\": 16000,\n  \"benefits\": \"Updated coverage for hospitalization, surgeries, medications\",\n  \"policyStatus\": \"ACTIVE\",\n  \"startDate\": \"2024-01-01\",\n  \"endDate\": \"2025-12-31\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/policies/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "policies", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Policy",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/policies/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "policies", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User Policies",
+      "item": [
+        {
+          "name": "Get All User Policies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/user-policies",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "user-policies"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Policies for User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/user-policies/user/2",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "user-policies", "user", "2"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Assign Policy to User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": {\"userId\": 2},\n  \"insurancePolicy\": {\"policyId\": 1},\n  \"purchasedDate\": \"2024-01-01\",\n  \"expiryDate\": \"2025-12-31\",\n  \"policyActiveStatus\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/user-policies",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "user-policies"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Hospitals",
+      "item": [
+        {
+          "name": "Get All Hospitals",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/hospitals",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "hospitals"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Hospital",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hospitalName\": \"New Medical Center\",\n  \"hospitalType\": \"Private\",\n  \"address\": \"600 Care Street, Mumbai\",\n  \"phoneNumber\": \"9166666666\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/hospitals",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "hospitals"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Doctors",
+      "item": [
+        {
+          "name": "Get All Doctors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/doctors",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "doctors"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Doctor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"doctorName\": \"Dr. New Doctor\",\n  \"specialization\": \"Dermatology\",\n  \"qualification\": \"MD\",\n  \"experienceYears\": 12,\n  \"hospital\": {\"hospitalId\": 1}\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/doctors",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "doctors"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Treatments",
+      "item": [
+        {
+          "name": "Get All Treatments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/treatments",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "treatments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Treatment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"diagnosis\": \"Diabetes Type 2\",\n  \"treatmentDescription\": \"Regular monitoring and medication\",\n  \"treatmentAmount\": 10000,\n  \"treatmentDate\": \"2024-10-15\",\n  \"user\": {\"userId\": 2},\n  \"doctor\": {\"doctorId\": 1},\n  \"hospital\": {\"hospitalId\": 1}\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/treatments",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "treatments"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Claims",
+      "item": [
+        {
+          "name": "Get All Claims",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/claims",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "claims"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Claims by User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/claims/user/2",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "claims", "user", "2"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Claims by Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/claims/status/PENDING",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "claims", "status", "PENDING"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Raise Claim",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"claimNumber\": \"CLM011\",\n  \"claimAmount\": 50000,\n  \"claimStatus\": \"PENDING\",\n  \"claimDate\": \"2024-10-15\",\n  \"user\": {\"userId\": 2},\n  \"treatment\": {\"treatmentId\": 1},\n  \"insurancePolicy\": {\"policyId\": 1}\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/claims",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "claims"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Claim",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"approvedAmount\": 45000,\n  \"approverComment\": \"Approved with deductible applied\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/claims/1/approve",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "claims", "1", "approve"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reject Claim",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rejectionReason\": \"Treatment not covered under current policy\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/claims/5/reject",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "claims", "5", "reject"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Documents",
+      "item": [
+        {
+          "name": "Get All Documents",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/documents",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "documents"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Document",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"documentName\": \"Hospital_Receipt.pdf\",\n  \"documentType\": \"Invoice\",\n  \"documentPath\": \"/documents/invoices/receipt_001.pdf\",\n  \"claim\": {\"claimId\": 1}\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/documents",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "documents"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Get All Payments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/payments",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "payments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payments by Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/payments/status/PENDING",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "payments", "status", "PENDING"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentAmount\": 45000,\n  \"paymentDate\": \"2024-10-16\",\n  \"paymentMode\": \"Bank Transfer\",\n  \"transactionId\": \"TXN0011\",\n  \"paymentStatus\": \"PENDING\",\n  \"companyAccountNumber\": \"1111222233334444\",\n  \"companyBankName\": \"ICICI Bank\",\n  \"claim\": {\"claimId\": 1},\n  \"user\": {\"userId\": 2}\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/payments",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "payments"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Process Payment",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/payments/1/process",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8080",
+              "path": ["api", "payments", "1", "process"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

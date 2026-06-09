@@ -1,0 +1,112 @@
+<section class="page card">
+  <div class="header-action">
+    <div>
+      <h2>{{ role === 'POLICYHOLDER' ? 'My Policies' : 'Insurance Policies' }}</h2>
+      <p class="subtitle">{{ role === 'POLICYHOLDER' ? 'Policies purchased by you.' : 'Available insurance plans and coverage options.' }}</p>
+    </div>
+    <button *ngIf="role === 'ADMIN'" class="primary-button" (click)="toggleAddForm()">
+      {{ showAddForm ? 'Cancel' : 'Add Policy' }}
+    </button>
+  </div>
+
+  <div *ngIf="flashMessage" class="flash-message" [ngClass]="{'success': flashType === 'success', 'error': flashType === 'error'}">
+    {{ flashMessage }}
+  </div>
+
+  <div *ngIf="showAddForm" class="add-form">
+    <h3>Add New Policy</h3>
+    <div class="form-grid">
+      <input name="policyNumber" [(ngModel)]="newPolicy.policyNumber" placeholder="Policy Number" type="text" />
+      <input name="policyName" [(ngModel)]="newPolicy.policyName" placeholder="Policy Name" type="text" />
+      <input name="policyType" [(ngModel)]="newPolicy.policyType" placeholder="Type (e.g. Life, Health)" type="text" />
+      <input name="coverageAmount" [(ngModel)]="newPolicy.coverageAmount" placeholder="Coverage Amount" type="number" />
+      <input name="premiumAmount" [(ngModel)]="newPolicy.premiumAmount" placeholder="Premium Amount" type="number" />
+      <input name="benefits" [(ngModel)]="newPolicy.benefits" placeholder="Benefits" type="text" />
+      <input name="startDate" [(ngModel)]="newPolicy.startDate" type="date" />
+      <input name="endDate" [(ngModel)]="newPolicy.endDate" type="date" />
+      <select name="policyStatus" [(ngModel)]="newPolicy.policyStatus">
+        <option value="ACTIVE">ACTIVE</option>
+        <option value="INACTIVE">INACTIVE</option>
+      </select>
+      <button
+  type="button"
+  class="primary-button"
+  (click)="addPolicy()">
+  Save Policy
+</button>
+    </div>
+  </div>
+
+  <div *ngIf="showEditForm && editingPolicy" class="add-form">
+    <h3>Edit Policy</h3>
+    <div class="form-grid">
+      <input name="editPolicyNumber" [(ngModel)]="editingPolicy!.policyNumber" placeholder="Policy Number" type="text" />
+      <input name="editPolicyName" [(ngModel)]="editingPolicy!.policyName" placeholder="Policy Name" type="text" />
+      <input name="editPolicyType" [(ngModel)]="editingPolicy!.policyType" placeholder="Type (e.g. Life, Health)" type="text" />
+      <input name="editCoverageAmount" [(ngModel)]="editingPolicy!.coverageAmount" placeholder="Coverage Amount" type="number" />
+      <input name="editPremiumAmount" [(ngModel)]="editingPolicy!.premiumAmount" placeholder="Premium Amount" type="number" />
+      <input name="editBenefits" [(ngModel)]="editingPolicy!.benefits" placeholder="Benefits" type="text" />
+      <input name="editStartDate" [(ngModel)]="editingPolicy!.startDate" type="date" />
+      <input name="editEndDate" [(ngModel)]="editingPolicy!.endDate" type="date" />
+      <select name="editPolicyStatus" [(ngModel)]="editingPolicy!.policyStatus">
+        <option value="ACTIVE">ACTIVE</option>
+        <option value="INACTIVE">INACTIVE</option>
+      </select>
+      <button
+  type="button"
+  class="primary-button"
+  (click)="updatePolicy()">
+  Update Policy
+</button>
+      <button
+  type="button"
+  class="secondary-button"
+  (click)="showEditForm = false">
+  Cancel
+</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="status">Loading policies...</div>
+  <div *ngIf="error" class="status error">{{ error }}</div>
+
+  <table *ngIf="!loading && !error && policies.length" class="data-table">
+    <thead>
+      <tr>
+        <th>Policy #</th>
+        <th>Plan Name</th>
+        <th>Type</th>
+        <th>Coverage</th>
+        <th>Premium</th>
+        <th>Status</th>
+        <th *ngIf="role === 'ADMIN'">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let policy of policies">
+        <td><strong>{{ policy.policyNumber }}</strong></td>
+        <td>{{ policy.policyName }}</td>
+        <td>{{ policy.policyType }}</td>
+        <td>{{ policy.coverageAmount | currency:'INR':'symbol':'1.0-0' }}</td>
+        <td>{{ policy.premiumAmount | currency:'INR':'symbol':'1.0-0' }}/yr</td>
+        <td>
+          <span class="badge" 
+                [class.badge-active]="policy.policyStatus === 'ACTIVE'"
+                [class.badge-inactive]="policy.policyStatus !== 'ACTIVE'">
+            {{ policy.policyStatus }}
+          </span>
+        </td>
+        <td *ngIf="role === 'ADMIN'">
+          <button class="secondary-button" (click)="editPolicy(policy)">Edit</button>
+          <button class="danger-button" (click)="removePolicy(policy.policyId)">
+            Remove
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && !error && !policies.length" class="status">
+    {{ role === 'POLICYHOLDER' ? 'No purchased policies were found for your account.' : 'No policies were found in the database.' }}
+  </div>
+</section>

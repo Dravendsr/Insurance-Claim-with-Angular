@@ -1,0 +1,265 @@
+Health Insurance Claim Management System
+======================================
+
+1. Project Overview
+-------------------
+This project is a Spring Boot backend application for health insurance claim management. It supports three main user roles: ADMIN, APPROVER, and POLICYHOLDER. The core modules are:
+- Entity layer: JPA entities representing database tables.
+- Repository layer: Spring Data JPA repositories for database access.
+- Service layer: business logic implementation.
+- Controller layer: REST APIs for clients or Postman.
+- Security layer: Spring Security for authentication and authorization.
+
+The project maintains the existing architecture and adds a minimal extension for:
+- Intelligent Claim Recommendation System
+- Admin Analytics Dashboard
+- Endpoint documentation in `zee/` with sample JSON request examples
+
+2. Modules and Linkage
+----------------------
+2.1 Entity layer
+The main entities are:
+- User -> stores user details, login credentials, role, contact, and account status.
+- InsurancePolicy -> stores policy definitions and coverage details.
+- UserPolicy -> links a user to a policy.
+- Hospital -> stores hospital data.
+- Doctor -> stores doctor data linked to a hospital.
+- Treatment -> stores treatment/diagnosis details and is linked to user, doctor, hospital.
+- Claim -> stores every insurance claim and is linked to user, treatment, policy, documents, payment, and approver.
+- Document -> stores proof files uploaded for claims.
+- Payment -> stores payment records for approved claims.
+
+2.2 Repository layer
+Existing repositories expose data operations using Spring Data JPA:
+- UserRepository: CRUD and role-based lookup.
+- InsurancePolicyRepository: policy operations.
+- UserPolicyRepository: user-policy assignments.
+- HospitalRepository: hospital operations.
+- DoctorRepository: doctor operations.
+- TreatmentRepository: treatment operations.
+- ClaimRepository: claim operations and analytics queries.
+- DocumentRepository: document operations.
+- PaymentRepository: payment operations.
+
+2.3 Service layer
+The service layer contains business logic, including claim validation and updates. ClaimServiceImpl now includes the recommendation engine and applies it when a claim is created or updated.
+
+2.4 Controller layer
+Controllers expose REST endpoints for each module and preserve all existing APIs. The new AdminAnalyticsController exposes ADMIN-only analytics endpoints without changing current claim or approval APIs. The `zee/` documentation folder now includes concrete body examples for key endpoint requests.
+
+2.5 Security layer
+SecurityConfig defines role-based access rules. Existing workflow is unchanged. The new analytics APIs are restricted to ADMIN users only.
+
+3. Data Models and Relationships
+--------------------------------
+3.1 Claim entity structure
+The Claim entity stores claim details, approval status, and recommendation fields. The key fields are:
+- claimId
+- claimNumber
+- claimAmount
+- approvedAmount
+- claimStatus
+- approverComment
+- rejectionReason
+- recommendationStatus  (new)
+- recommendationReason  (new)
+- recommendationScore   (new)
+- claimDate
+- approvedDate
+
+3.2 Claim relationships
+- Many Claims -> One User
+- Many Claims -> One InsurancePolicy
+- One Claim -> One Treatment
+- One Claim -> Many Documents
+- One Claim -> One Payment
+- Many Claims -> One assignedApprover (User)
+
+3.3 Other relationship highlights
+- One User -> Many UserPolicies
+- One InsurancePolicy -> Many UserPolicies
+- One Hospital -> Many Doctors
+- One Hospital -> Many Treatments
+- One Doctor -> Many Treatments
+- One User -> Many Treatments
+- One User -> Many Claims
+- One Treatment -> One Claim
+
+4. Role Behavior and Data Storage
+----------------------------------
+4.1 ADMIN role
+ADMIN can:
+- Manage users: create, update, delete users.
+- Manage policies: create, update, delete insurance policies.
+- Manage hospitals and doctors.
+- Assign policies to users.
+- Create payment records and process payments.
+- View all claims and analytics dashboard.
+
+Data stored by ADMIN:
+- Users table: username, password, role, email, address, bank details, accountStatus.
+- InsurancePolicy table: policyNumber, coverageAmount, policyStatus, dates.
+- Hospital table: hospitalName, address, phone.
+- Doctor table: doctorName, specialization, hospital link.
+- Payment table: payment amounts, status, claim link.
+
+ADMIN-only analytics APIs store no new persistent data. They reuse ClaimRepository counts and grouped queries.
+
+4.2 APPROVER role
+APPROVER can:
+- Review pending claims.
+- Approve or reject claims via existing endpoints.
+- Add approver comments or rejection reason.
+- View claim details, now including recommendationStatus, recommendationScore, recommendationReason.
+
+Data stored by APPROVER:
+- Updated Claim claimStatus.
+- approverComment or rejectionReason.
+- approvedAmount and approvedDate when approving.
+
+4.3 POLICYHOLDER role
+POLICYHOLDER can:
+- Create claims using existing `POST /api/claims`.
+- Upload documents related to claims.
+- View own claims and claim status.
+
+Data stored by POLICYHOLDER:
+- Claim table: claimAmount, treatment relation, policy relation, claimDate.
+- Document table: uploaded documents linked to claims.
+- Treatment table: diagnosis, treatmentDescription, treatmentDate.
+
+5. New Feature: Intelligent Claim Recommendation System
+-------------------------------------------------------
+5.1 Purpose
+This feature automatically analyzes every claim and provides a recommendation to the APPROVER before the final decision.
+The recommendation is guidance only. The APPROVER still has final authority to APPROVE or REJECT.
+
+5.2 Where it runs
+- When a claim is created (`saveClaim`)
+- When a claim is updated (`updateClaim`)
+- When a claim is patched (`patchClaim`)
+
+It does not recalculate on GET operations.
+
+5.3 Recommendation fields
+The Claim entity now includes:
+- recommendationStatus
+- recommendationReason
+- recommendationScore
+
+These fields are returned in claim responses to help approvers.
+
+5.4 Rule-based scoring logic
+The score starts at 100 and adjusts using simple rules:
+- If policy status is not ACTIVE: `score -= 50`
+- If claim amount exceeds coverage: `score -= 40`
+- If claim amount exceeds 80% of coverage: `score -= 15`
+- If required supporting documents are missing: `score -= 30`
+- If user has previous rejected claims: `score -= 15`
+- If same diagnosis has multiple previous claims: `score -= 20`
+- Final score is never below 0.
+
+5.5 Recommendation status mapping
+- `score >= 80` -> `APPROVE`
+- `50 <= score <= 79` -> `REVIEW`
+- `score < 50` -> `REJECT`
+
+5.6 Recommendation reasons
+The system builds a readable list of reasons such as:
+- Policy Active
+- Required Documents Uploaded
+- Claim Amount Within Coverage
+- Previous Rejected Claims Found
+- High Claim Amount
+- Coverage Exceeded
+- Policy Expired
+
+The final reason string is stored in `recommendationReason`.
+- The database initialization script `health_db_initialization.sql` was updated to add recommendation columns and sample values for claim rows.
+
+6. Admin Analytics Dashboard
+-----------------------------
+6.1 New Controller
+A new controller `AdminAnalyticsController` was added. It does not affect existing controllers or workflows.
+
+6.2 Admin-only APIs
+- `GET /api/admin/analytics/overview`
+  - returns total claims, approved count, rejected count, pending count, approval percentage, rejection percentage.
+- `GET /api/admin/analytics/top-hospitals`
+  - returns hospitals ordered by claim count.
+- `GET /api/admin/analytics/top-doctors`
+  - returns doctors ordered by claim count.
+- `GET /api/admin/analytics/high-risk-users`
+  - returns users with more than one rejected claim.
+- `GET /api/admin/analytics/treatment-statistics`
+  - returns most common diagnoses from claims.
+
+6.3 Repository support
+ClaimRepository now includes aggregated query methods using JPQL to support these analytics endpoints.
+- `zee/` docs were added for Postman-friendly request examples.
+
+7. Workflow Summary
+-------------------
+7.1 Login and security
+- All users authenticate using Spring Security and database-backed credentials.
+- `ADMIN`, `APPROVER`, and `POLICYHOLDER` roles control access.
+- Existing security flow remains unchanged.
+- Analytics endpoints are now added as ADMIN-only.
+
+7.2 Claim creation and recommendation flow
+1. POLICYHOLDER submits a claim using `POST /api/claims`.
+2. ClaimService validates input and stores the claim.
+3. `calculateRecommendation()` runs and sets recommendation fields.
+4. Claim is saved with recommendation guidance.
+5. APPROVER views the claim using `GET /api/claims/{claimId}`.
+6. APPROVER sees recommendation fields and decides to approve or reject.
+7. Claim is approved or rejected using existing endpoints.
+8. If approved, payment processing can continue as before.
+
+7.3 Approval workflow
+- Existing approval endpoints continue unchanged.
+- Recommendation data is advisory only.
+- Approver still updates claim status and provides reasons/comments.
+
+7.4 Analytics workflow
+- ADMIN calls analytics endpoints.
+- The system executes aggregated queries on the claim data.
+- No new data is stored by analytics.
+
+8. Entity Relationship Data Flow
+--------------------------------
+8.1 Many-to-one and one-to-many relationships
+- One User -> Many Claims
+- One User -> Many Treatments
+- One User -> Many UserPolicies
+- One InsurancePolicy -> Many UserPolicies
+- One InsurancePolicy -> Many Claims
+- One Hospital -> Many Doctors
+- One Hospital -> Many Treatments
+- One Doctor -> Many Treatments
+- One Claim -> Many Documents
+
+8.2 One-to-one relationships
+- One Claim -> One Treatment
+- One Claim -> One Payment
+
+8.3 Data ownership per role
+- POLICYHOLDER creates Treatment, Claim, Document data.
+- APPROVER updates Claim status, approval details, rejection reason.
+- ADMIN manages User, InsurancePolicy, Hospital, Doctor, Payment data.
+
+9. Table-to-Entity Mapping
+--------------------------
+- users -> User
+- insurance_policies -> InsurancePolicy
+- user_policies -> UserPolicy
+- hospitals -> Hospital
+- doctors -> Doctor
+- treatments -> Treatment
+- claims -> Claim
+- documents -> Document
+- payments -> Payment
+
+10. Summary
+-------------
+This project is designed to keep the original module architecture intact and only add guided recommendation and analytics support. The new feature is integrated safely without breaking existing endpoints or workflows. All module links remain consistent through JPA relationships and controller-service-repository layers.

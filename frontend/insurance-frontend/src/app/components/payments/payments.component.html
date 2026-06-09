@@ -1,0 +1,174 @@
+<section class="page card">
+  <h2>Payment Records</h2>
+  <p class="subtitle">Review processed payments and balances.</p>
+
+  <div *ngIf="flashMessage" class="flash-message" [ngClass]="{'success': flashType === 'success', 'error': flashType === 'error'}">
+    {{ flashMessage }}
+  </div>
+
+  <div *ngIf="auth.isAdmin" class="tab-bar">
+    <button type="button" class="tab-button" [class.active]="activeTab === 'records'" (click)="activeTab = 'records'">Payment Records</button>
+    <button type="button" class="tab-button" [class.active]="activeTab === 'send'" (click)="activeTab = 'send'">Send Payment</button>
+  </div>
+
+  <div *ngIf="loading" class="status">Loading payments...</div>
+  <div *ngIf="error" class="status error">{{ error }}</div>
+
+  <ng-container *ngIf="!loading && !error">
+    <ng-container *ngIf="auth.isAdmin; else policyholderView">
+      <div *ngIf="activeTab === 'send'">
+        <h3 class="section-title">Pending Payments</h3>
+        <div *ngIf="pendingPayments.length; else noPendingPayments">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Claim #</th>
+                <th>Amount</th>
+                <th>Recipient</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let payment of pendingPayments; index as i">
+                <td>{{ i + 1 }}</td>
+                <td>{{ payment.claimNumber || payment.claimId }}</td>
+                <td>{{ payment.amount | currency:'INR':'symbol':'1.0-0' }}</td>
+                <td>{{ payment.userId || 'Unknown' }}</td>
+                <td><span class="status-pill pending">{{ getDisplayStatus(payment) }}</span></td>
+                <td>
+                  <button class="primary-button" type="button" (click)="openPaymentGateway(payment)">Send Payment</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #noPendingPayments>
+          <div class="status">No pending payments are available to send right now.</div>
+        </ng-template>
+      </div>
+
+      <div *ngIf="activeTab === 'records'">
+        <h3 class="section-title">All Payments</h3>
+        <table *ngIf="payments.length; else noPayments" class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Claim #</th>
+              <th>Amount</th>
+              <th>Method</th>
+              <th>Status</th>
+              <th>Payment Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let payment of payments; index as i">
+              <td>{{ i + 1 }}</td>
+              <td>{{ payment.claimNumber || payment.claimId }}</td>
+              <td>{{ payment.amount | currency:'INR':'symbol':'1.0-0' }}</td>
+              <td>{{ payment.paymentMode || 'Automatic' }}</td>
+              <td><span [ngClass]="getBadgeClass(payment)">{{ getDisplayStatus(payment) }}</span></td>
+              <td>{{ payment.paymentDate }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <ng-template #noPayments>
+          <div class="status">No payments found.</div>
+        </ng-template>
+      </div>
+    </ng-container>
+
+    <ng-template #policyholderView>
+      <div>
+        <table *ngIf="payments.length; else noPayments" class="data-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Claim #</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Payment Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let payment of payments; index as i">
+              <td>{{ i + 1 }}</td>
+              <td>{{ payment.claimNumber || payment.claimId }}</td>
+              <td>{{ payment.amount | currency:'INR':'symbol':'1.0-0' }}</td>
+              <td><span [ngClass]="getBadgeClass(payment)">{{ getDisplayStatus(payment) }}</span></td>
+              <td>{{ payment.paymentDate }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <ng-template #noPayments>
+          <div class="status">No payments found.</div>
+        </ng-template>
+      </div>
+    </ng-template>
+  </ng-container>
+</section>
+
+<div class="modal-backdrop" *ngIf="showGatewayModal">
+  <div class="gateway-modal">
+    <div class="gateway-header">
+      <div>
+        <p class="eyebrow">Admin Payment Gateway</p>
+        <h3>Send Payment</h3>
+      </div>
+      <button class="close-button" type="button" (click)="closeGatewayModal()">✕</button>
+    </div>
+
+    <div class="gateway-body">
+      <ng-container [ngSwitch]="gatewayState">
+        <div *ngSwitchCase="'confirm'">
+          <p class="gateway-note">Confirm sending the payment to the policyholder.</p>
+          <div class="gateway-info">
+            <div><strong>Claim:</strong> {{ selectedPayment?.claimNumber || selectedPayment?.claimId }}</div>
+            <div><strong>Amount:</strong> {{ selectedPayment?.amount | currency:'INR':'symbol':'1.0-0' }}</div>
+            <div><strong>Mode:</strong> {{ selectedPayment?.paymentMode || 'Bank Transfer' }}</div>
+          </div>
+          <div class="gateway-actions">
+            <button class="secondary-button" type="button" (click)="closeGatewayModal()">Cancel</button>
+            <button class="primary-button" type="button" (click)="confirmSend()">Send Payment</button>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'success'" class="gateway-result success">
+          <div class="icon success">✔</div>
+          <h4>Payment Sent</h4>
+          <p>{{ gatewayMessage }}</p>
+          <button class="primary-button" type="button" (click)="closeGatewayModal()">Done</button>
+        </div>
+
+        <div *ngSwitchCase="'error'" class="gateway-result error">
+          <div class="icon error">✕</div>
+          <h4>Payment Failed</h4>
+          <p>{{ gatewayMessage }}</p>
+          <button class="secondary-button" type="button" (click)="closeGatewayModal()">Close</button>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" *ngIf="showReceiveModal && receivePayment">
+  <div class="receive-modal">
+    <div class="receive-header">
+      <div>
+        <p class="eyebrow">Payment Received</p>
+        <h3>Amount received successfully</h3>
+      </div>
+      <button class="close-button" type="button" (click)="closeReceiveModal()">✕</button>
+    </div>
+    <div class="receive-body">
+      <p class="gateway-note">You have received payment from the insurance company.</p>
+      <div class="gateway-info">
+        <div><strong>Claim:</strong> {{ receivePayment.claimNumber || receivePayment.claimId }}</div>
+        <div><strong>Amount:</strong> {{ receivePayment.amount | currency:'INR':'symbol':'1.0-0' }}</div>
+        <div><strong>Transaction:</strong> {{ receivePayment.transactionId || 'Auto generated' }}</div>
+      </div>
+      <button class="primary-button" type="button" (click)="closeReceiveModal()">OK</button>
+    </div>
+  </div>
+</div>

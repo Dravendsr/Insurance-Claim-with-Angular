@@ -1,0 +1,115 @@
+<section class="page card">
+  <div class="header-action">
+    <div>
+      <h2>User Management</h2>
+      <p class="subtitle">View and manage registered users.</p>
+    </div>
+    <button
+  type="button"
+  class="primary-button"
+  (click)="toggleAddForm()">
+      {{ showAddForm ? 'Cancel' : 'Add User' }}
+    </button>
+  </div>
+
+  <div *ngIf="flashMessage" class="flash-message" [ngClass]="{'success': flashType === 'success', 'error': flashType === 'error'}">
+    {{ flashMessage }}
+  </div>
+
+  <!-- Add User Form -->
+  <div *ngIf="showAddForm" class="edit-form">
+    <h3>Add New User</h3>
+    <div class="form-grid">
+      <label>Username
+        <input [(ngModel)]="newUser.username" type="text" placeholder="username" />
+      </label>
+      <label>Password
+        <input [(ngModel)]="newUser.password" type="password" placeholder="password" />
+      </label>
+      <label>Full Name
+        <input [(ngModel)]="newUser.fullName" type="text" placeholder="Full name" />
+      </label>
+      <label>Email
+        <input [(ngModel)]="newUser.email" type="email" placeholder="email@example.com" />
+      </label>
+      <label>Role
+        <select [(ngModel)]="newUser.role">
+          <option value="POLICYHOLDER">POLICYHOLDER</option>
+          <option value="APPROVER">APPROVER</option>
+          <option value="ADMIN">ADMIN</option>
+        </select>
+      </label>
+      <button
+  type="button"
+  class="primary-button"
+  (click)="addUser()">Save User</button>
+    </div>
+  </div>
+
+  <!-- Update User Form -->
+  <div *ngIf="showEditForm && editingUser" class="edit-form">
+    <h3>Update User Details</h3>
+    <div class="form-grid">
+      <label>Full Name
+        <input [(ngModel)]="editingUser!.fullName" type="text" />
+      </label>
+      <label>Email
+        <input [(ngModel)]="editingUser!.email" type="email" />
+      </label>
+      <label>Phone Number
+        <input [(ngModel)]="editingUser!.phoneNumber" type="text" />
+      </label>
+      <label>Status
+        <select [(ngModel)]="editingUser!.accountStatus">
+          <option value="ACTIVE">ACTIVE</option>
+          <option value="INACTIVE">INACTIVE</option>
+        </select>
+      </label>
+      <button
+  type="button"
+  class="primary-button"
+  (click)="updateUser()">Save Changes</button>
+      <button
+  type="button"
+  class="secondary-button"
+  (click)="showEditForm = false">Cancel</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="status">Loading users...</div>
+  <div *ngIf="error" class="status error">{{ error }}</div>
+  <table *ngIf="!loading && !error && users.length" class="data-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Username</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Phone</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users; index as i">
+        <td>{{ i + 1 }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.fullName }}</td>
+        <td>{{ user.email }}</td>
+        <td><span [class]="'badge badge-' + (user.role | lowercase)">{{ user.role }}</span></td>
+        <td><span [class]="'badge badge-' + (user.accountStatus === 'ACTIVE' ? 'active' : 'inactive')">{{ user.accountStatus }}</span></td>
+        <td>{{ user.phoneNumber }}</td>
+        <td>
+          <button class="secondary-button" (click)="editUser(user)">Edit</button>
+          <button class="danger-button" (click)="removeUser(user.userId)">
+            Remove
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="!loading && !error && !users.length" class="status">
+    No users found.
+  </div>
+</section>

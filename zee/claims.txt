@@ -1,0 +1,82 @@
+Claims Module - Postman Methods
+===============================
+
+Base URL: /api/claims
+
+1. GET /api/claims
+   - Description: Get all claims.
+   - Role: ADMIN
+
+2. GET /api/claims/{claimId}
+   - Description: Get claim details by ID.
+   - Role: authenticated
+
+3. GET /api/claims/user/{userId}
+   - Description: Get all claims for a specific user.
+   - Role: authenticated
+
+4. GET /api/claims/status/{status}
+   - Description: Get claims by claim status (PENDING, APPROVED, REJECTED, SETTLED).
+   - Role: authenticated
+
+5. POST /api/claims
+   - Description: Create a new claim.
+   - Role: POLICYHOLDER
+   - Body Example:
+     {
+       "claimNumber": "CLM011",
+       "claimAmount": 7500.0,
+       "claimStatus": "PENDING",
+       "user": { "userId": 2 },
+       "treatment": {
+         "diagnosis": "Knee Injury",
+         "treatmentDescription": "Physiotherapy and follow-up consultations",
+         "treatmentAmount": 7500.0,
+         "treatmentDate": "2024-06-01",
+         "hospitalName": "City Reimbursement Clinic",
+         "hospitalAddress": "121 Health Blvd, Unit 4",
+         "hospitalPhone": "555-9876",
+         "doctorName": "Dr. Laura Chen",
+         "doctorSpecialization": "Physical Therapy",
+         "doctorQualification": "DPT",
+         "doctorExperienceYears": 8
+       },
+       "insurancePolicy": { "policyId": 1 },
+       "assignedApprover": { "userId": 3 }
+     }
+   - Notes:
+     * When doctor/hospital data is provided inside treatment without IDs,
+       the backend automatically creates matching Doctor and Hospital records.
+     * The Treatment record will be linked to the new Doctor and Hospital via
+       foreign keys (doctor_id, hospital_id) instead of storing duplicate text fields.
+
+6. PATCH /api/claims/{claimId}
+   - Description: Partially update a claim.
+   - Role: ADMIN or APPROVER
+   - Body Example:
+     {
+       "claimAmount": 7800.0,
+       "approvedAmount": 7800.0,
+       "approverComment": "Adjusted claim amount after review."
+     }
+
+7. PUT /api/claims/{claimId}/approve
+   - Description: Approve a claim.
+   - Role: APPROVER
+   - Body Example:
+     {
+       "approvedAmount": 7500.0,
+       "approverComment": "Approved after document verification."
+     }
+
+8. PUT /api/claims/{claimId}/reject
+   - Description: Reject a claim.
+   - Role: APPROVER
+   - Body Example:
+     {
+       "rejectionReason": "Treatment is not covered under the current policy."
+     }
+
+9. DELETE /api/claims/{claimId}
+   - Description: Delete a claim.
+   - Role: ADMIN

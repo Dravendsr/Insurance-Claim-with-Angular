@@ -1,0 +1,38 @@
+<div class="login-page">
+  <div class="login-panel">
+    <div class="login-info">
+      <p class="eyebrow">Insurance Dashboard</p>
+      <h2>Secure sign in</h2>
+      <p>Access your policies, claims, and reimbursement status from one smart hub.</p>
+      <div class="info-stats">
+        <div>
+          <strong>98%</strong>
+          <span>Request success</span>
+        </div>
+        <div>
+          <strong>24/7</strong>
+          <span>Support</span>
+        </div>
+      </div>
+    </div>
+
+    <form class="login-form" (ngSubmit)="login()">
+      <h3>Login to your account</h3>
+      <label>
+        Username
+        <input type="text" [(ngModel)]="credentials.username" name="username" placeholder="Enter your username" />
+      </label>
+
+      <label>
+        Password
+        <input type="password" [(ngModel)]="credentials.password" name="password" placeholder="Enter your password" />
+      </label>
+
+      <button type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Signing in...' : 'Sign In' }}
+      </button>
+
+      <p class="message" *ngIf="message">{{ message }}</p>
+    </form>
+  </div>
+</div>

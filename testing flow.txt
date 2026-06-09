@@ -1,0 +1,51 @@
+Testing Flow for User Module
+
+1. Purpose
+- Explain the User Module unit testing approach for this Spring Boot project.
+- Provide a beginner-friendly overview of the testing tags and dependencies used.
+
+2. Test class created
+- File: src/test/java/com/insurance/claimmanagement/service/UserServiceImplTest.java
+- This class tests the UserServiceImpl service layer.
+
+3. What tags are used and what they do
+- @ExtendWith(MockitoExtension.class): enables Mockito support in JUnit 5 tests.
+- @Mock: creates a mock object for UserRepository so the test does not hit the database.
+- @InjectMocks: injects the mocked repository into UserServiceImpl.
+- @Test: marks a method as a test case that JUnit should run.
+
+4. Mockito methods used
+- when(...).thenReturn(...): defines mock behavior when repository methods are called.
+- verify(..., times(...)): confirms a mock method was called the expected number of times.
+- any(User.class): matches any User object in mock interactions.
+- never(): verifies that a method was not called.
+
+5. Assertions used and what they verify
+- assertEquals(expected, actual): checks that two values are equal.
+- assertTrue(condition): checks that a condition is true.
+- assertFalse(condition): checks that a condition is false.
+- assertNotNull(object): checks that an object is not null.
+
+6. What is being tested
+- saveUser_shouldSaveUserSuccessfully(): verifies save() called and saved user returned.
+- getUserById_shouldReturnUserWhenExists(): verifies existing user is returned.
+- getUserById_shouldReturnEmptyWhenUserNotFound(): verifies empty Optional returned.
+- getAllUsers_shouldReturnAllUsers(): verifies repository returns all users.
+- getUsersByRole_shouldReturnUsersByRole(): verifies role-based filtering.
+- updateUser_shouldUpdateExistingUser(): verifies update works and existing password is preserved.
+- deleteUser_shouldDeleteExistingUser(): verifies deleteById() is called when user exists.
+- deleteUser_shouldReturnFalseWhenUserNotFound(): verifies no delete occurs when user does not exist.
+- validateLogin_shouldReturnUserWhenCredentialsAreCorrect(): verifies valid login returns user.
+- validateLogin_shouldReturnEmptyWhenCredentialsAreInvalid(): verifies invalid login returns empty.
+
+7. Dependencies included for testing
+- spring-boot-starter-test: provides JUnit 5, Mockito, and Spring Boot testing tools.
+- mockito-core: provides Mockito mocking support.
+
+8. Why these dependencies are used
+- JUnit 5 is the testing framework that runs the test cases.
+- Mockito allows mocking repository behavior so tests remain fast and independent of the database.
+
+9. Notes
+- No changes were made to application logic, entities, repositories, controllers, services, security, APIs, schema, or package structure.
+- This is a unit testing addition only.

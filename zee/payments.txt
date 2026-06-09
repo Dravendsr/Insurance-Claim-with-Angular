@@ -1,0 +1,44 @@
+Payments Module - Postman Methods
+================================
+
+Base URL: /api/payments
+
+1. GET /api/payments
+   - Description: Get all payments.
+   - Role: authenticated
+
+2. GET /api/payments/{paymentId}
+   - Description: Get payment details by ID.
+   - Role: authenticated
+
+3. GET /api/payments/status/{paymentStatus}
+   - Description: Get payments by status (PENDING, COMPLETED, FAILED).
+   - Role: authenticated
+
+4. POST /api/payments
+   - Description: Create a payment record.
+   - Role: ADMIN
+   - Body Example:
+     {
+       "paymentAmount": 2500.0,
+       "paymentDate": "2024-10-13",
+       "paymentMode": "Bank Transfer",
+       "transactionId": "TXN011",
+       "paymentStatus": "PENDING",
+       "companyAccountNumber": "1111222233334444",
+       "companyBankName": "ICICI Bank",
+       "claim": { "claimId": 8 },
+       "user": { "userId": 9 }
+     }
+
+5. PUT /api/payments/{paymentId}/process
+   - Description: Process or complete payment.
+   - Role: ADMIN
+   - Body Example:
+     {
+       "paymentStatus": "COMPLETED"
+     }
+
+6. DELETE /api/payments/{paymentId}
+   - Description: Delete a payment.
+   - Role: ADMIN

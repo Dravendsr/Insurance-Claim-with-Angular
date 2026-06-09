@@ -1,0 +1,53 @@
+Policies Module - Postman Methods
+==============================
+
+Base URL: /api/policies
+
+1. GET /api/policies
+   - Description: Get all insurance policies.
+   - Role: authenticated
+
+2. GET /api/policies/{policyId}
+   - Description: Get policy details by ID.
+   - Role: authenticated
+
+3. POST /api/policies
+   - Description: Create a new policy.
+   - Role: ADMIN
+   - Body Example:
+     {
+       "policyNumber": "POL123456",
+       "policyName": "Standard Health Protector",
+       "policyType": "Individual",
+       "coverageAmount": 200000.0,
+       "premiumAmount": 4000.0,
+       "benefits": "Hospitalization, Surgery, Maternity",
+       "policyStatus": "ACTIVE",
+       "startDate": "2024-01-01",
+       "endDate": "2025-01-01"
+     }
+
+4. PUT /api/policies/{policyId}
+   - Description: Update a policy.
+   - Role: ADMIN
+   - Body Example:
+     {
+       "policyName": "Standard Health Protector Plus",
+       "coverageAmount": 250000.0,
+       "premiumAmount": 4500.0,
+       "policyStatus": "ACTIVE",
+       "startDate": "2024-01-01",
+       "endDate": "2025-01-01"
+     }
+
+5. PATCH /api/policies/{policyId}
+   - Description: Partially update a policy.
+   - Role: ADMIN
+   - Body Example:
+     {
+       "policyStatus": "INACTIVE"
+     }
+
+6. DELETE /api/policies/{policyId}
+   - Description: Delete a policy.
+   - Role: ADMIN

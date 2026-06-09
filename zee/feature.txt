@@ -1,0 +1,35 @@
+New Feature - Intelligent Claim Recommendation & Admin Analytics
+=================================================================
+
+This feature adds intelligent recommendation guidance for claims and improved admin analytics.
+
+Recommendation Feature:
+- Automatically calculates recommendation when a claim is created or updated.
+- Uses rule-based validation in ClaimServiceImpl.calculateRecommendation().
+- Stores results in Claim entity fields:
+  - recommendationScore
+  - recommendationStatus
+  - recommendationReason
+- Provides approvers with advisory guidance, while keeping manual approval/rejection unchanged.
+
+Key recommendation rules:
+- Policy status and expiry
+- Required supporting documents
+- Claim vs treatment cost
+- Coverage limit usage
+- High-risk user history
+- Repeated diagnosis within the last 180 days
+
+Analytics Feature:
+- Added ADMIN analytics endpoints under /api/admin/analytics
+- Overview includes counts, approval/rejection percentages, approved amounts, and paid amounts
+- Top hospitals and doctors now include approved counts and totals
+- High-risk user view includes rejection percentage
+- Treatment statistics include total and average claim amounts
+- New recommendations endpoint summarizes recommended approvals/reviews/rejections
+
+Role flow:
+- POLICYHOLDER creates claims and uploads documents.
+- SYSTEM calculates recommendation scores and guidance.
+- APPROVER views recommendations and makes the final decision.
+- ADMIN views analytics dashboards.

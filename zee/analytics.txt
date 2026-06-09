@@ -1,0 +1,33 @@
+Admin Analytics Module - Postman Methods
+=======================================
+
+Base URL: /api/admin/analytics
+
+Notes:
+- All endpoints are GET requests.
+- ADMIN role only.
+- No request body is required for these endpoints.
+
+1. GET /api/admin/analytics/overview
+   - Description: Get analytics overview with counts, percentages, approved amount, and paid amount.
+   - Role: ADMIN
+
+2. GET /api/admin/analytics/top-hospitals
+   - Description: Get the top hospitals by claim count, approved count, and total claim amount.
+   - Role: ADMIN
+
+3. GET /api/admin/analytics/top-doctors
+   - Description: Get the top doctors by claim count and approved claim count.
+   - Role: ADMIN
+
+4. GET /api/admin/analytics/high-risk-users
+   - Description: Get users with rejected claims >= 3, including rejection percentage.
+   - Role: ADMIN
+
+5. GET /api/admin/analytics/treatment-statistics
+   - Description: Get treatment statistics by diagnosis, count, total claim amount, and average claim amount.
+   - Role: ADMIN
+
+6. GET /api/admin/analytics/recommendations
+   - Description: Get recommendation summary counts for APPROVE, REVIEW, and REJECT recommendations.
+   - Role: ADMIN

@@ -1,0 +1,141 @@
+Frontend structure and component documentation
+===============================================
+
+Top-level frontend folder: `frontend`
+--------------------------------------
+This folder contains the Angular app and a couple of support files:
+
+- `insurance-frontend/` - the main Angular application source tree.
+- `package-lock.json` - npm dependency lock file for the frontend project.
+- `README.md` - frontend project documentation and instructions.
+
+Main frontend app folder: `frontend/insurance-frontend`
+-------------------------------------------------------
+This is the Angular workspace root for the Health Insurance Claim Management frontend.
+Key directories and files inside it:
+
+- `src/` - application source code.
+- `package.json` - application dependencies and npm scripts.
+- `angular.json` - Angular project configuration.
+- `tsconfig.json` - TypeScript compiler configuration.
+- `proxy.conf.json` - API proxy config for local development.
+- `README.md` - app-specific README.
+
+Primary app source folder: `frontend/insurance-frontend/src/app`
+--------------------------------------------------------------
+This folder contains the Angular app bootstrap and the functional components.
+
+Key files:
+- `app.module.ts` - root Angular module registering app components and routing.
+- `app-routing.module.ts` - route definitions for the app pages.
+- `app.component.ts` - root component logic.
+- `app.component.html` - root layout, sidebar navigation, header, and router outlet.
+- `app.component.css` - root application styling.
+- `app.routes.ts` / `app.ts` - legacy or additional routing reference files.
+
+Components folder: `frontend/insurance-frontend/src/app/components`
+----------------------------------------------------------------
+This folder contains page-level components for the app.
+Each folder below typically includes:
+- `<name>.component.ts` - component logic
+- `<name>.component.html` - component template
+- `<name>.component.css` - component styles
+
+List of component folders and their responsibilities:
+
+1. `analytics/`
+   - `analytics.component.ts` - admin analytics dashboard component.
+   - `analytics.component.html` - analytics summary cards and messages.
+   - `analytics.component.css` - styling for analytics cards and layout.
+
+2. `claims/`
+   - `claims.component.ts` - claims list page, fetches claim data.
+   - `claims.component.html` - claims table, loading and error states.
+   - `claims.component.css` - claims page styling.
+   - `claims.ts` - optional claim model or helper definitions.
+
+3. `dashboard/`
+   - `dashboard.component.ts` - dashboard overview and summary metrics.
+   - `dashboard.component.html` - dashboard hero, cards, and metrics layout.
+   - `dashboard.component.css` - styling for dashboard panels.
+   - `dashboard.ts` - optional dashboard helper types or content.
+
+4. `login/`
+   - `login.component.ts` - login page logic and API call.
+   - `login.component.html` - login form template.
+   - `login.component.css` - login page styling.
+   - `login.ts` - optional supplementary login logic or interfaces.
+
+5. `users/`
+   - `users.component.ts` - user management page logic.
+   - `users.component.html` - user table, create/edit forms, actions.
+   - `users.component.css` - user page styling.
+
+6. `policies/`
+   - `policies.component.ts` - policy management page logic.
+   - `policies.component.html` - policy table and forms.
+   - `policies.component.css` - policy page styling.
+
+7. `payments/`
+   - `payments.component.ts` - payment list page logic.
+   - `payments.component.html` - payment table and states.
+   - `payments.component.css` - payment page styling.
+
+8. `documents/`
+   - `documents.component.ts` - documents page logic.
+   - `documents.component.html` - documents UI.
+   - `documents.component.css` - documents styling.
+
+9. `doctors/`
+   - `doctors.component.ts` - doctors page logic.
+   - `doctors.component.html` - doctors list template.
+   - `doctors.component.css` - doctors styles.
+
+10. `hospitals/`
+    - `hospitals.component.ts` - hospitals page logic.
+    - `hospitals.component.html` - hospitals list template.
+    - `hospitals.component.css` - hospitals styles.
+
+11. `treatments/`
+    - `treatments.component.ts` - treatments page logic.
+    - `treatments.component.html` - treatments table.
+    - `treatments.component.css` - treatments styles.
+
+12. `user-details/`
+    - `user-details.component.ts` - profile/detail page logic.
+    - `user-details.component.html` - user profile template.
+    - `user-details.component.css` - profile styling.
+
+Services and shared folder: `frontend/insurance-frontend/src/app/services`
+---------------------------------------------------------------------------
+This folder contains service classes and shared helpers used across components.
+
+Files:
+- `api.service.ts` - central HTTP client wrapper, adds auth headers and base API path.
+- `auth.service.ts` - stores and retrieves authentication state, token, role, and username.
+- `auth.ts` - alternate auth helper providing Angular signals for auth state.
+- `claim-list.component.ts` - shared claim list logic using signals and claim service.
+- `claim-list.component.html` - shared claim list template.
+- `claim-list.component.css` - shared claim list styling.
+- `claim.service.ts` - service for claim-specific backend calls.
+
+Other important folders in `src/app`
+------------------------------------
+- `legacy/` - legacy Angular code or older app versions kept for reference.
+- `models/` - TypeScript models used by components (e.g. `claim.ts`, `user.ts`, `insurance-policy.ts`).
+
+General comments for the frontend structure
+------------------------------------------
+- The main application entry point is `AppComponent`.
+- Page navigation is driven by `AppRoutingModule`.
+- Each page component follows the standard Angular pattern: logic, template, and styles.
+- The service layer handles API calls and authentication state.
+- The `insurance-frontend` app is isolated inside the `frontend` folder.
+
+Usage note
+----------
+To understand the application routing and page structure, start with:
+- `app-routing.module.ts` for routes
+- `app.component.html` for sidebar links and router outlet
+- `services/auth.service.ts` for session/auth state
+- page folders under `components/` for actual UI pages

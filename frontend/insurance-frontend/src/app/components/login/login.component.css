@@ -1,0 +1,123 @@
+.login-page {
+  min-height: calc(100vh - 2rem);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: radial-gradient(circle at top left, rgba(79, 70, 229, 0.12), transparent 30%),
+    linear-gradient(180deg, var(--bg) 0%, var(--surface-strong) 100%);
+}
+
+.login-panel {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 2rem;
+  max-width: 960px;
+  width: 100%;
+  background: var(--surface);
+  border-radius: 2rem;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+
+.login-info {
+  padding: 3rem 2.5rem;
+  background: var(--login-info-bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  font-size: 0.78rem;
+  color: var(--primary);
+}
+
+.login-info h2 {
+  margin: 0;
+  font-size: clamp(2rem, 2.5vw, 3rem);
+  line-height: 1.05;
+}
+
+.login-info p {
+  margin: 0;
+  color: var(--muted);
+  max-width: 380px;
+}
+
+.info-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.info-stats div {
+  padding: 1rem;
+  background: var(--surface-strong);
+  border-radius: 1rem;
+}
+
+.info-stats strong {
+  display: block;
+  font-size: 1.4rem;
+  margin-bottom: 0.35rem;
+}
+
+.login-form {
+  padding: 2.5rem;
+  display: grid;
+  gap: 1.3rem;
+}
+
+.login-form h3 {
+  margin: 0;
+  font-size: 1.75rem;
+  color: var(--text);
+}
+
+label {
+  display: grid;
+  gap: 0.55rem;
+  color: var(--text);
+}
+
+input {
+  width: 100%;
+  padding: 0.96rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: var(--surface-strong);
+  color: var(--text);
+}
+
+button {
+  width: 100%;
+  padding: 1rem 1.1rem;
+  border: none;
+  border-radius: 1.1rem;
+  background: var(--primary);
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  background: var(--primary-soft);
+}
+
+.message {
+  margin: 0;
+  color: #dc2626;
+}
+
+@media (max-width: 900px) {
+  .login-panel {
+    grid-template-columns: 1fr;
+  }
+}
