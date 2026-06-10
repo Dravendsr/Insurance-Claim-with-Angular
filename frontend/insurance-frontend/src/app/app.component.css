@@ -104,7 +104,10 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.18);
+  /* use a transparent container so the SVG background shows through */
+  background: transparent;
+  padding: 4px;
+  box-sizing: border-box;
   font-weight: 800;
   font-size: 1.1rem;
   overflow: hidden;
@@ -112,10 +115,19 @@ body {
 
 /* When brand-mark is an image, ensure it fits and isn't clipped */
 .brand-mark img {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  display: block;
+  max-width: 100%;
+  /* contain so the whole emblem is visible and centered */
+  object-fit: contain;
+  object-position: center;
+  border-radius: inherit;
+}
+
+/* For small screens, scale the logo slightly larger */
+@media (max-width: 600px) {
+  .brand-mark { width: 56px; height: 56px; }
 }
 
 .brand-title {
