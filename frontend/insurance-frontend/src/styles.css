@@ -5,6 +5,22 @@ body {
   margin: 0;
   min-height: 100%;
   box-sizing: border-box;
+  /* Core theme variables (light mode defaults) */
+  --bg: #f8fafc;
+  --text: #0f172a;
+  --surface: #ffffff;
+  --surface-strong: #f1f5f9;
+  --border: #e2e8f0;
+  --muted: #64748b;
+  --success: #10b981;
+  --error: #ef4444;
+  --error-soft: #fee2e2;
+  --sidebar-bg: #ffffff;
+  --button-surface: #f8fafc;
+  --sidebar-link-hover: #eef2ff;
+  --card-shadow: 0 6px 20px rgba(2,6,23,0.06);
+  --row-hover: #f1f5f9;
+
   background: var(--bg);
   color: var(--text);
   font-family: Inter, system-ui, sans-serif;
@@ -45,6 +61,24 @@ html.dark-theme {
   color-scheme: dark;
   --header-text: #7df9ff;
   --login-info-bg: linear-gradient(180deg, rgba(45, 212, 255, 0.16), rgba(30, 41, 59, 0.95));
+}
+
+/* Dark theme variable overrides */
+html.dark-theme {
+  --bg: #0b1220;
+  --text: #e6eef6;
+  --surface: #071226;
+  --surface-strong: #0f172a;
+  --border: #152033;
+  --muted: #94a3b8;
+  --success: #06d6a0;
+  --error: #ff6b6b;
+  --error-soft: #3a0f0f;
+  --sidebar-bg: #061225;
+  --button-surface: #0b1622;
+  --sidebar-link-hover: rgba(45,212,255,0.06);
+  --card-shadow: 0 6px 18px rgba(2,6,23,0.45);
+  --row-hover: rgba(255,255,255,0.02);
 }
 
 input::placeholder,
